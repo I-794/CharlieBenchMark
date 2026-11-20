@@ -1,0 +1,10 @@
+{
+  "note": "Model ids come from https://openrouter.ai/models. Ids change over time, so check each one there before a real run. Add or remove entries freely.",
+  "models": [
+    {"id": "anthropic/claude-haiku-4.5", "name": "Claude Haiku 4.5"},
+    {"id": "openai/gpt-4o-mini", "name": "GPT-4o mini"},
+    {"id": "google/gemini-2.5-flash", "name": "Gemini 2.5 Flash"},
+    {"id": "meta-llama/llama-3.3-70b-instruct", "name": "Llama 3.3 70B"},
+    {"id": "deepseek/deepseek-chat", "name": "DeepSeek Chat"}
+  ]
+}

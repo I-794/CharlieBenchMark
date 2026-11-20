@@ -1,0 +1,49 @@
+{
+  "category": "estimation",
+  "name": "Estimation",
+  "instructions": "These are estimation problems. Your answer must be a single number written in digits, with no units and no range.",
+  "questions": [
+    {
+      "id": "est-001",
+      "scorer": "numeric_range",
+      "prompt": "Roughly how many times does a human heart beat over an 80-year life?",
+      "low": 2000000000,
+      "high": 4000000000
+    },
+    {
+      "id": "est-002",
+      "scorer": "numeric_range",
+      "prompt": "Roughly how many full turns does one tire of an ordinary passenger car make while driving 100 kilometers?",
+      "low": 40000,
+      "high": 60000
+    },
+    {
+      "id": "est-003",
+      "scorer": "numeric_range",
+      "prompt": "Roughly how many sheets of ordinary office printer paper would you need to stack to make a pile 1 meter tall?",
+      "low": 8000,
+      "high": 12000
+    },
+    {
+      "id": "est-004",
+      "scorer": "numeric_range",
+      "prompt": "Roughly how many liters of water does it take to fill an Olympic-size swimming pool?",
+      "low": 2000000,
+      "high": 3750000
+    },
+    {
+      "id": "est-005",
+      "scorer": "numeric_range",
+      "prompt": "Roughly how many words are in a typical 300-page printed novel?",
+      "low": 60000,
+      "high": 120000
+    },
+    {
+      "id": "est-006",
+      "scorer": "numeric_range",
+      "prompt": "A high school has 1,000 students. Roughly how many pencils do all of its students use up, in total, during one school year?",
+      "low": 5000,
+      "high": 50000
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+# pretend-model output, regenerated with `python -m charlie run --mock`
+results/mock/
+# your hidden question set: same format as questions/, never published
+questions_private/

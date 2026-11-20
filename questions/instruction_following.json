@@ -1,0 +1,71 @@
+{
+  "category": "instruction_following",
+  "name": "Instruction Following",
+  "instructions": "",
+  "questions": [
+    {
+      "id": "if-001",
+      "scorer": "constraints",
+      "prompt": "Describe the ocean in exactly 12 words. Do not use the letter 'e' anywhere in your reply.",
+      "constraints": [
+        {"type": "word_count", "value": 12},
+        {"type": "forbid_letter", "value": "e"}
+      ],
+      "reference": "Vast salty liquid mass rolling across our world, calm and stormy always."
+    },
+    {
+      "id": "if-002",
+      "scorer": "constraints",
+      "prompt": "Write exactly 3 sentences about dogs. Use only lowercase letters. The very last word of your reply must be 'woof'.",
+      "constraints": [
+        {"type": "sentence_count", "value": 3},
+        {"type": "lowercase"},
+        {"type": "ends_with", "value": "woof"}
+      ],
+      "reference": "dogs are loyal friends. they love to run and play outside. every happy dog says woof."
+    },
+    {
+      "id": "if-003",
+      "scorer": "constraints",
+      "prompt": "Invent a fictional student. Reply with only a raw JSON object (no code fences, no extra text) that has exactly these three keys: \"name\" (a string), \"age\" (a whole number), and \"hobbies\" (a list of exactly 3 strings).",
+      "constraints": [
+        {"type": "json_keys", "value": ["name", "age", "hobbies"]},
+        {"type": "json_int", "key": "age"},
+        {"type": "json_array_len", "key": "hobbies", "value": 3}
+      ],
+      "reference": "{\"name\": \"Mira Okafor\", \"age\": 16, \"hobbies\": [\"chess\", \"running\", \"painting\"]}"
+    },
+    {
+      "id": "if-004",
+      "scorer": "constraints",
+      "prompt": "Write a poem about nature that is exactly 7 lines long. The first letters of the lines, read from top to bottom, must spell CHARLIE. Do not add a title.",
+      "constraints": [
+        {"type": "line_count", "value": 7},
+        {"type": "acrostic", "value": "CHARLIE"}
+      ],
+      "reference": "Calm winds drift over hills\nHollow trees hum softly\nA river bends below\nRain taps on old stone\nLight fades into dusk\nInsects sing at night\nEvening settles in"
+    },
+    {
+      "id": "if-005",
+      "scorer": "constraints",
+      "prompt": "List exactly 5 different fruits, one per line, in alphabetical order. Do not use numbers, bullets, or any other text.",
+      "constraints": [
+        {"type": "line_count", "value": 5},
+        {"type": "sorted_lines"},
+        {"type": "no_bullets"}
+      ],
+      "reference": "apple\nbanana\ncherry\ngrape\nmango"
+    },
+    {
+      "id": "if-006",
+      "scorer": "constraints",
+      "prompt": "Explain what a benchmark is in exactly 2 sentences. You must use the word 'yardstick'. You must not use the words 'test', 'measure', or 'score'.",
+      "constraints": [
+        {"type": "sentence_count", "value": 2},
+        {"type": "contains", "value": "yardstick"},
+        {"type": "forbid_words", "value": ["test", "measure", "score"]}
+      ],
+      "reference": "A benchmark is a shared yardstick that lets people compare different systems fairly. Everyone runs the same tasks so the results can be lined up side by side."
+    }
+  ]
+}
