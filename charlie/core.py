@@ -73,8 +73,41 @@ def build_messages(question):
     return [{"role": "system", "content": system}, {"role": "user", "content": question["prompt"]}]
 
 
+MAX_TRIES = 12
+
+
+class Throttle:
+    """Spaces out requests, and holds every worker back after a rate-limit reply."""
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.gap = 0.0          # seconds between requests (0 = no limit)
+        self.next_slot = 0.0    # earliest time the next request may start
+        self.warned = 0.0
+
+    def set_rpm(self, rpm):
+        self.gap = 60.0 / rpm if rpm else 0.0
+
+    def wait_turn(self):
+        with self.lock:
+            start = max(time.time(), self.next_slot)
+            self.next_slot = start + self.gap
+        time.sleep(max(0.0, start - time.time()))
+
+    def pause(self, seconds):
+        with self.lock:
+            self.next_slot = max(self.next_slot, time.time() + seconds)
+            if seconds >= 20 and time.time() - self.warned > 30:
+                self.warned = time.time()
+                print("  rate limited by the provider, waiting it out (this is normal)")
+        time.sleep(seconds)
+
+
+throttle = Throttle()
+
+
 def call_openrouter(model_id, messages, max_tokens, timeout=180):
-    """Send one request. Returns (text, usage dict). Retries rate limits and server errors."""
+    """Send one request. Returns (text, usage dict, seconds). Retries rate limits and server errors."""
     key = os.environ.get("OPENROUTER_API_KEY")
     if not key:
         raise SystemExit("Set OPENROUTER_API_KEY first (or use --mock to try it without a key).")
@@ -83,23 +116,30 @@ def call_openrouter(model_id, messages, max_tokens, timeout=180):
         "usage": {"include": True},
     }).encode()
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
-    for attempt in range(5):
+    for attempt in range(MAX_TRIES):
+        wait = min(2 ** attempt, 30)
         try:
+            throttle.wait_turn()
+            start = time.time()
             request = urllib.request.Request(API_URL, data=body, headers=headers)
             with urllib.request.urlopen(request, timeout=timeout) as reply:
                 data = json.load(reply)
             if "error" in data:
                 raise RuntimeError(str(data["error"])[:300])
-            return data["choices"][0]["message"].get("content") or "", data.get("usage") or {}
+            # time only the request that worked, not the waiting before it
+            return (data["choices"][0]["message"].get("content") or "", data.get("usage") or {},
+                    time.time() - start)
         except urllib.error.HTTPError as error:
             detail = error.read().decode(errors="replace")[:300]
             if error.code not in (408, 429) and error.code < 500:
                 raise RuntimeError(f"HTTP {error.code}: {detail}")
             last = f"HTTP {error.code}: {detail}"
+            if error.code == 429:
+                wait = 20  # rate limits reset each minute, so wait it out
         except (urllib.error.URLError, TimeoutError, RuntimeError, KeyError, ValueError) as error:
             last = str(error)
-        time.sleep(2 ** attempt)
-    raise RuntimeError(f"gave up after 5 tries: {last}")
+        throttle.pause(wait)
+    raise RuntimeError(f"gave up after {MAX_TRIES} tries: {last}")
 
 
 def mock_reply(model, question, trial):
@@ -127,12 +167,14 @@ def read_records(path):
         return [json.loads(line) for line in handle if line.strip()]
 
 
-def run_benchmark(models, results_dir, trials=3, workers=4, max_tokens=4000, mock=False, limit=None):
+def run_benchmark(models, results_dir, trials=3, workers=4, max_tokens=4000, mock=False, limit=None,
+                  rpm=None):
     """Ask every model every question `trials` times and append replies to disk.
 
     Safe to stop and restart: questions that already have a saved reply are skipped,
     and questions that failed with an API error are tried again.
     """
+    throttle.set_rpm(rpm)
     _, questions = load_questions()
     if limit:
         questions = questions[:limit]
@@ -153,9 +195,7 @@ def run_benchmark(models, results_dir, trials=3, workers=4, max_tokens=4000, moc
                 if mock:
                     text, usage, latency = mock_reply(model, question, trial)
                 else:
-                    start = time.time()
-                    text, usage = call_openrouter(model_id, build_messages(question), max_tokens)
-                    latency = time.time() - start
+                    text, usage, latency = call_openrouter(model_id, build_messages(question), max_tokens)
             except RuntimeError as error:
                 with lock:
                     counts["failed"] += 1

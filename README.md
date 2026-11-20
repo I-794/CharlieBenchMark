@@ -85,6 +85,7 @@ To open one in Google Sheets: go to sheets.google.com, start a blank sheet, then
 | `--limit N` | Only the first N questions |
 | `--workers N` | How many requests go out at once (default 4) |
 | `--max-tokens N` | Longest reply allowed (default 4000) |
+| `--rpm N` | Send at most N requests per minute. Use this if a provider rate-limits you |
 
 ## Adding questions
 
