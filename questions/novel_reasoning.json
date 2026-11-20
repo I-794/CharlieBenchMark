@@ -4,40 +4,76 @@
   "instructions": "Each problem uses made-up rules. Use only the rules given in the problem.",
   "questions": [
     {
-      "id": "nr-001",
+      "id": "nr-twopile-1",
       "scorer": "exact",
-      "prompt": "In the game Zorp there is one pile of stones. Two players take turns. On your turn you must remove exactly 1, 3, or 4 stones (you cannot remove more stones than are left). The player who removes the LAST stone LOSES. The pile has 9 stones and it is your turn. Exactly one move guarantees you a win if you play perfectly afterwards. How many stones do you remove?",
-      "answer": "1"
+      "prompt": "In the game Twopile there are two piles of stones and two players who alternate turns. On your turn you must do exactly one of these: (a) remove exactly 1, 2 or 4 stones from ONE pile, or (b) remove exactly 2 stones from EACH of the two piles. You can never remove more stones than a pile holds. A player who has no legal move on their turn loses. Consider every starting position in which the first pile holds between 1 and 5 stones and the second pile holds between 1 and 5 stones (25 positions in total). In how many of those positions can the player who moves first force a win?",
+      "answer": "19"
     },
     {
-      "id": "nr-002",
+      "id": "nr-twopile-2",
       "scorer": "exact",
-      "prompt": "In the card game Trellis every card has a color (R = red, B = blue, G = green) and a number. A hand is scored like this, in order: (1) add up the numbers, but each red card counts double; (2) if the hand contains exactly two blue cards, subtract 5; (3) if the single highest-numbered card in the hand is green, add that card's number one more time. What is the score of this hand: R3, B7, G9, B2, R4?",
-      "answer": "36"
+      "prompt": "In the game Twopile there are two piles of stones and two players who alternate turns. On your turn you must do exactly one of these: (a) remove exactly 1, 2 or 4 stones from ONE pile, or (b) remove exactly 1 stone from EACH of the two piles. You can never remove more stones than a pile holds. A player who has no legal move on their turn loses. Consider every starting position in which the first pile holds between 1 and 7 stones and the second pile holds between 1 and 7 stones (49 positions in total). In how many of those positions can the player who moves first force a win?",
+      "answer": "33"
     },
     {
-      "id": "nr-003",
+      "id": "nr-mulch-1",
       "scorer": "exact",
-      "prompt": "A hopper sits on a number line at position 0 and obeys four commands. F: move forward 3. B: move backward 2. D: double the current position. S: flip the sign of the current position, but only if the current position is an odd number (otherwise S does nothing). The hopper runs the commands F F D B S F D in that order. What is its final position?",
-      "answer": "26"
+      "prompt": "The Mulch-2 machine reads a word one letter at a time, left to right, and builds an output string that starts empty. For each letter it applies the FIRST rule below that fits:\n1. If the output is not empty and the letter equals the current last character of the output, delete that last character and append nothing.\n2. Otherwise, if the letter is a vowel (A, E, I, O, U), append it to the output twice.\n3. Otherwise, if the letter is R, reverse the whole output and then append R.\n4. Otherwise, delete the last character of the output (if there is one) and then append the letter.\nWhat is the output after the machine reads ORIUMDUDRGDBAE?",
+      "answer": "DUDUIIROOBAAEE"
     },
     {
-      "id": "nr-004",
+      "id": "nr-mulch-2",
       "scorer": "exact",
-      "prompt": "Define a new operation # on whole numbers: if a is greater than b, then a # b = (a times b) minus a minus b. Otherwise, a # b = a plus (2 times b). What is (5 # 3) # (2 # 4)?",
-      "answer": "27"
+      "prompt": "The Mulch-2 machine reads a word one letter at a time, left to right, and builds an output string that starts empty. For each letter it applies the FIRST rule below that fits:\n1. If the output is not empty and the letter equals the current last character of the output, delete that last character and append nothing.\n2. Otherwise, if the letter is a vowel (A, E, I, O, U), append it to the output twice.\n3. Otherwise, if the letter is R, reverse the whole output and then append R.\n4. Otherwise, delete the last character of the output (if there is one) and then append the letter.\nWhat is the output after the machine reads BUOSOARABBUMAAOEERRLAOLDLN?",
+      "answer": "EOOAMUARBUUOSOOALAAON"
     },
     {
-      "id": "nr-005",
+      "id": "nr-hopper-1",
       "scorer": "exact",
-      "prompt": "The game Corners is played on a 4 by 4 grid. Columns are lettered A to D and rows are numbered 1 to 4, so cells are named like B3. A player wins the moment they own all four corner cells of any rectangle whose sides are parallel to the grid (squares count, and the rectangle can be any size, but it must span two different columns and two different rows). Player X owns A1, A3, B2, C1 and D4. Player O owns B1, D1, C4 and B3. It is X's turn. Which single empty cell wins the game for X immediately?",
-      "answer": "C3"
+      "prompt": "A hopper sits on a number line at position 0. It also has a memory slot that starts at 0. It obeys these commands:\nF: move forward 3.\nB: move backward 2.\nD: double the current position.\nS: flip the sign of the position, but only if the position is odd.\nM: replace the position with its remainder when divided by 7, always a value from 0 to 6 (so -3 becomes 4).\nT: swap the position and the memory slot.\nH: if the position is greater than the memory slot, subtract 5 from the position; otherwise add 4.\nThe hopper runs these commands in order: F F D S H D H F T T F D M H F D M S F S. What is its final position?",
+      "answer": "-3"
     },
     {
-      "id": "nr-006",
+      "id": "nr-hopper-2",
       "scorer": "exact",
-      "prompt": "The Mulch machine reads a word one letter at a time, left to right, and builds an output string that starts empty. If the letter is a vowel (A, E, I, O, U), the machine appends that vowel to the output twice. If the letter is a consonant, the machine first deletes the last character of the output (if the output is not empty), then appends the consonant once. What is the output after the machine reads the word PLANET?",
-      "answer": "LANET"
+      "prompt": "A hopper sits on a number line at position 0. It also has a memory slot that starts at 0. It obeys these commands:\nF: move forward 3.\nB: move backward 2.\nD: double the current position.\nS: flip the sign of the position, but only if the position is odd.\nM: replace the position with its remainder when divided by 7, always a value from 0 to 6 (so -3 becomes 4).\nT: swap the position and the memory slot.\nH: if the position is greater than the memory slot, subtract 5 from the position; otherwise add 4.\nThe hopper runs these commands in order: H H M F M T F S F B D D M M F F H M T D H H M S S F S S B F T S F T M H. What is its final position?",
+      "answer": "4"
+    },
+    {
+      "id": "nr-automaton-1",
+      "scorer": "exact",
+      "prompt": "A strip of 14 cells is arranged in a ring, so the last cell is next to the first. Each cell is black (B) or white (W). All cells change at the same moment, once per step, by this rule: a cell is black after the step if exactly one or exactly two of these three cells were black before the step: its left neighbour, its right neighbour, and the cell two places to its right. Otherwise it is white. The cell's own colour does not matter. The strip starts as BBBWBWBWBBWWBB (written left to right). What is the strip after 4 steps? Answer with 14 letters, each B or W.",
+      "answer": "BWWWWWBBWBBBBB"
+    },
+    {
+      "id": "nr-automaton-2",
+      "scorer": "exact",
+      "prompt": "A strip of 18 cells is arranged in a ring, so the last cell is next to the first. Each cell is black (B) or white (W). All cells change at the same moment, once per step, by this rule: a cell is black after the step if exactly one or exactly two of these three cells were black before the step: its left neighbour, its right neighbour, and the cell two places to its right. Otherwise it is white. The cell's own colour does not matter. The strip starts as BBWWWWWWBBWBWWWWBW (written left to right). What is the strip after 7 steps? Answer with 18 letters, each B or W.",
+      "answer": "BBBWBWBBBBWBWBBBBW"
+    },
+    {
+      "id": "nr-trellis-1",
+      "scorer": "exact",
+      "prompt": "In the card game Trellis every card has a colour (R = red, B = blue, G = green) and a number. A hand is scored in four steps: (1) add up the numbers, with each red card counting double; (2) if the hand contains exactly two blue cards, subtract 5; (3) if the highest-numbered card in the hand is green, add that card's number one more time; (4) if the hand contains at least one card of each of the three colours, add 4. You hold these 8 cards: B11, G2, G9, B3, B6, R8, B5, G4. You must choose exactly 4 of them to form a hand. What is the highest score you can get?",
+      "answer": "48"
+    },
+    {
+      "id": "nr-trellis-2",
+      "scorer": "exact",
+      "prompt": "In the card game Trellis every card has a colour (R = red, B = blue, G = green) and a number. A hand is scored in four steps: (1) add up the numbers, with each red card counting double; (2) if the hand contains exactly two blue cards, subtract 5; (3) if the highest-numbered card in the hand is green, add that card's number one more time; (4) if the hand contains at least one card of each of the three colours, add 4. You hold these 10 cards: G9, G6, B7, G10, R4, B2, R12, G5, B1, G11. You must choose exactly 5 of them to form a hand. What is the highest score you can get?",
+      "answer": "65"
+    },
+    {
+      "id": "nr-leaper-1",
+      "scorer": "exact",
+      "prompt": "A 6 by 6 board has columns lettered A to F and rows numbered 1 to 6, so squares are named like C4. A piece called the skewer moves by going exactly 1 square in one direction (up, down, left or right) and exactly 3 squares in a perpendicular direction, landing on the final square only (it jumps over anything in between). That gives it up to 8 possible moves. It may not leave the board and may not land on a blocked square. The blocked squares are: A5, B1, C5, E3. The skewer starts on A1. What is the smallest number of moves it needs to reach E1?",
+      "answer": "4"
+    },
+    {
+      "id": "nr-leaper-2",
+      "scorer": "exact",
+      "prompt": "A 8 by 8 board has columns lettered A to H and rows numbered 1 to 8, so squares are named like C4. A piece called the skewer moves by going exactly 1 square in one direction (up, down, left or right) and exactly 3 squares in a perpendicular direction, landing on the final square only (it jumps over anything in between). That gives it up to 8 possible moves. It may not leave the board and may not land on a blocked square. The blocked squares are: B4, C1, C5, D4, E1, E8, G7, H3, H8. The skewer starts on A1. What is the smallest number of moves it needs to reach H2?",
+      "answer": "5"
     }
   ]
 }

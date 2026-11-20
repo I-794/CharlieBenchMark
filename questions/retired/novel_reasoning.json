@@ -1,0 +1,43 @@
+{
+  "category": "novel_reasoning",
+  "name": "Novel Reasoning",
+  "instructions": "Each problem uses made-up rules. Use only the rules given in the problem.",
+  "questions": [
+    {
+      "id": "nr-001",
+      "scorer": "exact",
+      "prompt": "In the game Zorp there is one pile of stones. Two players take turns. On your turn you must remove exactly 1, 3, or 4 stones (you cannot remove more stones than are left). The player who removes the LAST stone LOSES. The pile has 9 stones and it is your turn. Exactly one move guarantees you a win if you play perfectly afterwards. How many stones do you remove?",
+      "answer": "1"
+    },
+    {
+      "id": "nr-002",
+      "scorer": "exact",
+      "prompt": "In the card game Trellis every card has a color (R = red, B = blue, G = green) and a number. A hand is scored like this, in order: (1) add up the numbers, but each red card counts double; (2) if the hand contains exactly two blue cards, subtract 5; (3) if the single highest-numbered card in the hand is green, add that card's number one more time. What is the score of this hand: R3, B7, G9, B2, R4?",
+      "answer": "36"
+    },
+    {
+      "id": "nr-003",
+      "scorer": "exact",
+      "prompt": "A hopper sits on a number line at position 0 and obeys four commands. F: move forward 3. B: move backward 2. D: double the current position. S: flip the sign of the current position, but only if the current position is an odd number (otherwise S does nothing). The hopper runs the commands F F D B S F D in that order. What is its final position?",
+      "answer": "26"
+    },
+    {
+      "id": "nr-004",
+      "scorer": "exact",
+      "prompt": "Define a new operation # on whole numbers: if a is greater than b, then a # b = (a times b) minus a minus b. Otherwise, a # b = a plus (2 times b). What is (5 # 3) # (2 # 4)?",
+      "answer": "27"
+    },
+    {
+      "id": "nr-005",
+      "scorer": "exact",
+      "prompt": "The game Corners is played on a 4 by 4 grid. Columns are lettered A to D and rows are numbered 1 to 4, so cells are named like B3. A player wins the moment they own all four corner cells of any rectangle whose sides are parallel to the grid (squares count, and the rectangle can be any size, but it must span two different columns and two different rows). Player X owns A1, A3, B2, C1 and D4. Player O owns B1, D1, C4 and B3. It is X's turn. Which single empty cell wins the game for X immediately?",
+      "answer": "C3"
+    },
+    {
+      "id": "nr-006",
+      "scorer": "exact",
+      "prompt": "The Mulch machine reads a word one letter at a time, left to right, and builds an output string that starts empty. If the letter is a vowel (A, E, I, O, U), the machine appends that vowel to the output twice. If the letter is a consonant, the machine first deletes the last character of the output (if the output is not empty), then appends the consonant once. What is the output after the machine reads the word PLANET?",
+      "answer": "LANET"
+    }
+  ]
+}

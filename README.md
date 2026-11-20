@@ -1,20 +1,23 @@
-# Charlie Index
+# AutismBench
 
-An independent benchmark for language models. It scores each model on five skills, combines them into one number (the Charlie Index), and also reports price and speed.
+An independent benchmark for language models. It scores each model on six kinds of hard, exact tasks, combines them into one overall score, and also reports price and speed.
+
+The name is a nod to the kind of thinking the benchmark rewards: spotting patterns, following rule systems exactly, and sweating the details. It does not measure or diagnose autism in anyone or anything.
 
 | Category | What it checks | How it is graded |
 |---|---|---|
-| Novel Reasoning | Made-up games and rules that cannot be memorized | Exact answer match |
-| Honesty | Admitting "UNKNOWN" for things that do not exist, while still answering real questions | Exact answer match |
-| Instruction Following | Obeying strict rules about length, letters, and format | Code checks each rule |
-| Estimation | Fermi-style "roughly how many" questions | Answer must land in a range |
-| Coding | Small Python functions | Hidden tests are run |
+| Novel Reasoning | Invented games and machines that must be worked through step by step | Exact answer match |
+| Pattern and Detail | Counting, comparing long lists, sorting by odd rules, reading timetables | Exact answer match |
+| Honesty | Saying "UNKNOWN" when a question cannot be answered, while still answering the ones that can | Exact answer match |
+| Instruction Following | Writing under several strict rules at once | Every rule must be obeyed |
+| Estimation | Numbers that are hard to work out exactly but can be reasoned toward | Answer must land near the true value |
+| Coding | Long, detailed specs with many edge cases | Every hidden test must pass |
 
 Everything is graded by code. The full rules are in [METHODOLOGY.md](METHODOLOGY.md).
 
 ## What you need
 
-- Python 3.10 or newer. Nothing else to install.
+- Python 3.10 or newer. Nothing else to install. On some computers the command is `python3` instead of `python`.
 - An [OpenRouter](https://openrouter.ai) API key for real runs. One key reaches almost every model.
 
 ## Try it with no API key
@@ -36,7 +39,7 @@ Then open `site/index.html` in a browser.
 2. Set your key (this lasts until you close the terminal):
 
    ```bash
-   export OPENROUTER_API_KEY="your-key-here"       # Mac or Linux
+   export OPENROUTER_API_KEY="your-key-here"       # Mac, Linux, Chromebook, Codespaces
    $env:OPENROUTER_API_KEY="your-key-here"         # Windows PowerShell
    ```
 
@@ -46,13 +49,13 @@ Then open `site/index.html` in a browser.
    python -m charlie run --only openai/gpt-6-luna --limit 3 --trials 1
    ```
 
-4. Run the whole thing. Every model answers every question 3 times.
+4. Run the whole thing once through, then check what it cost before doing more.
 
    ```bash
-   python -m charlie run
+   python -m charlie run --trials 1
    ```
 
-   If it stops or some requests fail, run the same command again. It skips whatever is already saved.
+   Running `python -m charlie run` afterwards adds two more passes (three in total), which is what gives the leaderboard its error bars. If a run stops or some requests fail, run the same command again. It skips whatever is already saved.
 
 5. Score it.
 
@@ -60,21 +63,9 @@ Then open `site/index.html` in a browser.
    python -m charlie score
    ```
 
-   This prints the leaderboard, writes `results/leaderboard.json`, and updates the website data in `site/data.js`. Open `site/index.html` to see it.
+   This prints the leaderboard, writes the files in `results/`, and updates the website data in `site/data.js`. Open `site/index.html` to see it.
 
-Raw replies are saved in `results/raw/`, one file per model. Scoring always re-grades from those files, so if you fix a scorer you can run `score` again without paying for new answers.
-
-## Tracking results in a spreadsheet
-
-Every time you run `score`, three spreadsheet files are written to `results/`:
-
-| File | What is in it |
-|---|---|
-| `leaderboard.csv` | The current leaderboard: one row per model with the index, every category, cost and speed |
-| `question_scores.csv` | One row per question and one column per model, so you can see exactly what each model missed |
-| `history.csv` | A running log. Each day you score adds new rows, so you can chart how scores change over time |
-
-To open one in Google Sheets: go to sheets.google.com, start a blank sheet, then File, Import, Upload, and pick the file. For `history.csv`, re-import with "Replace current sheet" after each new run and any charts you made will update.
+Raw replies are saved in `results/raw/`, one file per model. Scoring always re-grades from those files, so if you fix a scorer you can run `score` again without paying for new answers. Only models listed in `models.json` appear on the leaderboard.
 
 ### Useful options
 
@@ -84,27 +75,52 @@ To open one in Google Sheets: go to sheets.google.com, start a blank sheet, then
 | `--trials N` | How many times each question is asked (default 3) |
 | `--limit N` | Only the first N questions |
 | `--workers N` | How many requests go out at once (default 4) |
-| `--max-tokens N` | Longest reply allowed (default 4000) |
+| `--max-tokens N` | Longest reply allowed, thinking included (default 8000) |
 | `--rpm N` | Send at most N requests per minute. Use this if a provider rate-limits you |
 
-## Adding questions
+## Tracking results in a spreadsheet
 
-Each file in `questions/` is one category. Add a new entry to its `questions` list, then run `python -m charlie validate`. Every question is worth one point and uses one of four scorers:
+Every time you run `score`, three spreadsheet files are written to `results/`:
+
+| File | What is in it |
+|---|---|
+| `leaderboard.csv` | The current leaderboard: one row per model with the overall score, every category, cost and speed |
+| `question_scores.csv` | One row per question and one column per model, so you can see exactly what each model missed |
+| `history.csv` | A running log. Each day you score adds new rows, so you can chart how scores change over time |
+
+To open one in Google Sheets: go to sheets.google.com, start a blank sheet, then File, Import, Upload, and pick the file.
+
+## Where the questions come from
+
+The questions are built by `tools/build_questions.py`. The puzzles are generated by code and every answer key is computed by code, so the keys cannot contain a human slip. The coding tests are produced by running a reference solution.
+
+```bash
+python tools/build_questions.py          # rebuild the public set in questions/
+python -m charlie validate               # confirm every answer key checks out
+```
+
+To add your own question, edit the lists in `tools/build_questions.py` (or `tools/coding_tasks.py` for coding) and rebuild. Each question uses one of four scorers:
 
 - `exact`: needs `answer` (a string, or a list of accepted strings)
-- `numeric_range`: needs `low` and `high`
+- `numeric_range`: needs `low` and `high`, and optionally `falloff`
 - `constraints`: needs a `constraints` list and a `reference` reply that obeys them
 - `code`: needs `function`, `tests` (a list of `[arguments, expected]`) and a `reference` solution
 
-`validate` grades each reference reply and complains if one does not get full marks, which catches broken answer keys.
+Version 1 questions that every model answered perfectly are kept in `questions/retired/` for the record. They are no longer asked.
 
 ### Keeping a hidden set
 
-Questions posted publicly can end up in a model's training data. For a serious leaderboard, put most of your questions in a folder named `questions_private/` using the same file format. That folder is loaded automatically and is ignored by git, so it never gets published. Use a different `category` file name there only if you want a new category; otherwise reuse the same `category` and `name` values and give the questions new ids.
+Questions posted publicly can end up in a model's training data. This command makes a fresh set of puzzles with different numbers and puts it in `questions_private/`, which is loaded automatically and never uploaded to GitHub:
+
+```bash
+python tools/build_questions.py --private 77
+```
+
+Use any number you like in place of 77, and keep it to yourself.
 
 ## Safety note
 
-The Coding category runs the Python that models write, on your computer, in a separate process with a 10-second limit. That is not a real sandbox. Only benchmark models you are comfortable running code from, or run the benchmark inside a container or virtual machine.
+The Coding category runs the Python that models write, on your computer, in a separate process with a 10-second limit. That is not a real sandbox. Only benchmark models you are comfortable running code from, or run the benchmark inside a container, virtual machine, or Codespace.
 
 ## Publishing the site
 

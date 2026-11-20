@@ -4,353 +4,4692 @@
   "instructions": "",
   "questions": [
     {
-      "id": "code-001",
+      "id": "code-h01",
       "scorer": "code",
-      "function": "run_length",
-      "prompt": "Write a function run_length(s) that compresses a string by replacing each run of the same character with the character followed by the run's length. Single characters still get a 1. Example: run_length('aaabcc') returns 'a3b1c2'. An empty string returns an empty string.",
+      "strict": true,
+      "function": "blip",
+      "prompt": "Write a function blip(program) that runs a program in the tiny stack language Blip and returns its output.\n\n`program` is a string of tokens separated by single spaces. An empty string is a program with no tokens. The machine has a stack of integers (starts empty) and an output list (starts empty). Tokens are executed left to right:\n\n- An integer such as 7 or -12 (an optional minus sign followed by digits): push it.\n- + - * : pop b, then pop a, then push a+b, a-b or a*b.\n- / : pop b, then pop a, then push a // b using Python floor division. If b is 0 that is an error.\n- dup : push a copy of the top value.\n- drop : remove the top value.\n- swap : swap the top two values.\n- over : push a copy of the second value from the top.\n- print : pop the top value and append it to the output list.\n- [ : pop a value n. If n <= 0, skip forward to just after the matching ]. Otherwise run the tokens between this [ and its matching ] exactly n times in a row, then continue after the ]. Blocks can be nested. n is popped only once, when the [ is reached.\n- ] : marks the end of a block.\n\nErrors: any token that is not listed above, popping or reading from a stack that does not hold enough values, division by zero, or brackets that do not match up (a ] with no earlier unmatched [, or a [ that is never closed). Brackets are checked for the whole program before anything runs, so a program with bad brackets is an error even if the bad part would never execute. Other errors only count if the token is actually executed.\n\nIf an error happens return the string \"ERROR\". Otherwise return the output list.\n\nExample: blip(\"3 [ 7 print ]\") returns [7, 7, 7] and blip(\"1 +\") returns \"ERROR\".",
       "tests": [
-        [
-          [
-            "aaabcc"
-          ],
-          "a3b1c2"
-        ],
         [
           [
             ""
           ],
-          ""
+          []
         ],
         [
           [
-            "a"
+            "3 [ 7 print ]"
           ],
-          "a1"
+          [
+            7,
+            7,
+            7
+          ]
         ],
         [
           [
-            "abc"
+            "1 +"
           ],
-          "a1b1c1"
+          "ERROR"
         ],
         [
           [
-            "zzzzzzzzzzzz"
+            "2 3 + print"
           ],
-          "z12"
+          [
+            5
+          ]
         ],
         [
           [
-            "aabbaa"
+            "10 3 - print 10 3 / print -10 3 / print"
           ],
-          "a2b2a2"
+          [
+            7,
+            3,
+            -4
+          ]
         ],
         [
           [
-            "  x"
+            "7 0 /"
           ],
-          " 2x1"
+          "ERROR"
+        ],
+        [
+          [
+            "5 dup * print"
+          ],
+          [
+            25
+          ]
+        ],
+        [
+          [
+            "1 2 swap print print"
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            "1 2 over print print print"
+          ],
+          [
+            1,
+            2,
+            1
+          ]
+        ],
+        [
+          [
+            "4 drop print"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "0 [ 1 0 / ] 9 print"
+          ],
+          [
+            9
+          ]
+        ],
+        [
+          [
+            "0 [ bogus ] 9 print"
+          ],
+          [
+            9
+          ]
+        ],
+        [
+          [
+            "1 [ bogus ]"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "-2 [ 5 print ] 6 print"
+          ],
+          [
+            6
+          ]
+        ],
+        [
+          [
+            "2 [ 3 [ 1 print ] 0 print ]"
+          ],
+          [
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            "1 5 [ dup print 2 * ] drop"
+          ],
+          [
+            1,
+            2,
+            4,
+            8,
+            16
+          ]
+        ],
+        [
+          [
+            "] 1 print ["
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "1 [ 2 print"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "1 print ]"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "0 [ ] ]"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "3 [ ]"
+          ],
+          []
+        ],
+        [
+          [
+            "["
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "5 print print"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "over"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "1 over"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "2 [ 2 [ 2 [ 8 print ] ] ]"
+          ],
+          [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        ],
+        [
+          [
+            "1 2 3 4 5 5 [ print ]"
+          ],
+          [
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        ],
+        [
+          [
+            "10 0 4 [ over + ] print print"
+          ],
+          [
+            40,
+            10
+          ]
+        ],
+        [
+          [
+            "3 dup [ dup print 1 - ] print"
+          ],
+          [
+            3,
+            2,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            "6 -3 / print 7 -2 / print"
+          ],
+          [
+            -2,
+            -4
+          ]
+        ],
+        [
+          [
+            "--5 print"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "1 2 3 * + print"
+          ],
+          [
+            7
+          ]
+        ],
+        [
+          [
+            "0 1 [ dup [ 9 print ] 4 print ] print"
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        [
+          [
+            "2 [ 1 [ 0 [ 5 0 / ] 3 print ] ]"
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        [
+          [
+            "4 2 [ dup * ] print"
+          ],
+          [
+            256
+          ]
+        ],
+        [
+          [
+            "1 [ 2 [ ] ] print"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "PRINT"
+          ],
+          "ERROR"
+        ],
+        [
+          [
+            "3 [ 1 ] + + print"
+          ],
+          [
+            3
+          ]
         ]
       ],
-      "reference": "```python\ndef run_length(s):\n    out = []\n    i = 0\n    while i < len(s):\n        j = i\n        while j < len(s) and s[j] == s[i]:\n            j += 1\n        out.append(s[i] + str(j - i))\n        i = j\n    return ''.join(out)\n```"
+      "reference": "```python\ndef blip(program):\n    import re\n    tokens = program.split(\" \") if program else []\n    match, open_stack = {}, []\n    for i, tok in enumerate(tokens):\n        if tok == \"[\":\n            open_stack.append(i)\n        elif tok == \"]\":\n            if not open_stack:\n                return \"ERROR\"\n            match[open_stack.pop()] = i\n    if open_stack:\n        return \"ERROR\"\n    stack, out = [], []\n\n    class Bad(Exception):\n        pass\n\n    def pop():\n        if not stack:\n            raise Bad()\n        return stack.pop()\n\n    def run(lo, hi):\n        i = lo\n        while i < hi:\n            tok = tokens[i]\n            if re.fullmatch(r\"-?[0-9]+\", tok):\n                stack.append(int(tok))\n            elif tok in (\"+\", \"-\", \"*\", \"/\"):\n                b = pop()\n                a = pop()\n                if tok == \"+\":\n                    stack.append(a + b)\n                elif tok == \"-\":\n                    stack.append(a - b)\n                elif tok == \"*\":\n                    stack.append(a * b)\n                else:\n                    if b == 0:\n                        raise Bad()\n                    stack.append(a // b)\n            elif tok == \"dup\":\n                a = pop()\n                stack.extend([a, a])\n            elif tok == \"drop\":\n                pop()\n            elif tok == \"swap\":\n                b = pop()\n                a = pop()\n                stack.extend([b, a])\n            elif tok == \"over\":\n                if len(stack) < 2:\n                    raise Bad()\n                stack.append(stack[-2])\n            elif tok == \"print\":\n                out.append(pop())\n            elif tok == \"[\":\n                n = pop()\n                end = match[i]\n                for _ in range(max(n, 0)):\n                    run(i + 1, end)\n                i = end\n            elif tok == \"]\":\n                pass\n            else:\n                raise Bad()\n            i += 1\n\n    try:\n        run(0, len(tokens))\n    except Bad:\n        return \"ERROR\"\n    return out\n```"
     },
     {
-      "id": "code-002",
+      "id": "code-h02",
       "scorer": "code",
-      "function": "second_largest",
-      "prompt": "Write a function second_largest(nums) that returns the second largest DISTINCT value in a list of integers, or None if there are fewer than two distinct values. Example: second_largest([4, 9, 9, 2]) returns 4.",
+      "strict": true,
+      "function": "kessel_date",
+      "prompt": "Write a function kessel_date(n) that converts a day count into a date in the Kessel calendar.\n\nThe Kessel calendar works like this:\n- A year has 10 months, numbered 1 to 10. Odd-numbered months have 37 days and even-numbered months have 36 days.\n- In a leap year, month 10 has 37 days instead of 36.\n- Year Y is a leap year if Y is divisible by 4 but not by 20, or if Y is divisible by 100. Years are numbered starting from 1.\n- Weeks have 6 days named, in order: Ao, Bel, Cur, Dax, Eph, Fen. The week cycle never resets.\n\nn is a whole number, 1 or more. Day number 1 is year 1, month 1, day 1, and it is an Ao. Return a string in the form \"Y-M-D W\" where W is the weekday name, with no zero padding.\n\nExample: kessel_date(1) returns \"1-1-1 Ao\" and kessel_date(38) returns \"1-2-1 Bel\".",
+      "tests": [
+        [
+          [
+            1
+          ],
+          "1-1-1 Ao"
+        ],
+        [
+          [
+            2
+          ],
+          "1-1-2 Bel"
+        ],
+        [
+          [
+            6
+          ],
+          "1-1-6 Fen"
+        ],
+        [
+          [
+            7
+          ],
+          "1-1-7 Ao"
+        ],
+        [
+          [
+            37
+          ],
+          "1-1-37 Ao"
+        ],
+        [
+          [
+            38
+          ],
+          "1-2-1 Bel"
+        ],
+        [
+          [
+            73
+          ],
+          "1-2-36 Ao"
+        ],
+        [
+          [
+            74
+          ],
+          "1-3-1 Bel"
+        ],
+        [
+          [
+            365
+          ],
+          "1-10-36 Eph"
+        ],
+        [
+          [
+            366
+          ],
+          "2-1-1 Fen"
+        ],
+        [
+          [
+            367
+          ],
+          "2-1-2 Ao"
+        ],
+        [
+          [
+            730
+          ],
+          "2-10-36 Dax"
+        ],
+        [
+          [
+            731
+          ],
+          "3-1-1 Eph"
+        ],
+        [
+          [
+            1095
+          ],
+          "3-10-36 Cur"
+        ],
+        [
+          [
+            1096
+          ],
+          "4-1-1 Dax"
+        ],
+        [
+          [
+            1460
+          ],
+          "4-10-36 Bel"
+        ],
+        [
+          [
+            1461
+          ],
+          "4-10-37 Cur"
+        ],
+        [
+          [
+            1462
+          ],
+          "5-1-1 Dax"
+        ],
+        [
+          [
+            1827
+          ],
+          "6-1-1 Cur"
+        ],
+        [
+          [
+            6939
+          ],
+          "19-10-36 Cur"
+        ],
+        [
+          [
+            6940
+          ],
+          "20-1-1 Dax"
+        ],
+        [
+          [
+            7304
+          ],
+          "20-10-36 Bel"
+        ],
+        [
+          [
+            7305
+          ],
+          "21-1-1 Cur"
+        ],
+        [
+          [
+            7300
+          ],
+          "20-10-32 Dax"
+        ],
+        [
+          [
+            7305
+          ],
+          "21-1-1 Cur"
+        ],
+        [
+          [
+            36500
+          ],
+          "100-10-16 Bel"
+        ],
+        [
+          [
+            36523
+          ],
+          "101-1-2 Ao"
+        ],
+        [
+          [
+            36524
+          ],
+          "101-1-3 Bel"
+        ],
+        [
+          [
+            36525
+          ],
+          "101-1-4 Cur"
+        ],
+        [
+          [
+            1569748
+          ],
+          "4299-3-3 Dax"
+        ],
+        [
+          [
+            1490605
+          ],
+          "4082-6-1 Ao"
+        ],
+        [
+          [
+            2829554
+          ],
+          "7748-8-17 Bel"
+        ],
+        [
+          [
+            874688
+          ],
+          "2396-1-11 Bel"
+        ],
+        [
+          [
+            2402045
+          ],
+          "6578-2-22 Eph"
+        ],
+        [
+          [
+            2942568
+          ],
+          "8058-2-34 Fen"
+        ],
+        [
+          [
+            1035116
+          ],
+          "2835-4-1 Bel"
+        ],
+        [
+          [
+            471145
+          ],
+          "1291-1-25 Ao"
+        ],
+        [
+          [
+            2929607
+          ],
+          "8022-8-2 Eph"
+        ],
+        [
+          [
+            1898396
+          ],
+          "5199-1-35 Bel"
+        ],
+        [
+          [
+            1362092
+          ],
+          "3730-7-5 Bel"
+        ],
+        [
+          [
+            1909081
+          ],
+          "5228-4-19 Ao"
+        ]
+      ],
+      "reference": "```python\ndef kessel_date(n):\n    names = [\"Ao\", \"Bel\", \"Cur\", \"Dax\", \"Eph\", \"Fen\"]\n    weekday = names[(n - 1) % 6]\n\n    def leap(y):\n        return (y % 4 == 0 and y % 20 != 0) or y % 100 == 0\n\n    year, left = 1, n\n    while True:\n        size = 366 if leap(year) else 365\n        if left > size:\n            left -= size\n            year += 1\n        else:\n            break\n    month = 1\n    while True:\n        days = 37 if month % 2 == 1 else 36\n        if month == 10 and leap(year):\n            days = 37\n        if left > days:\n            left -= days\n            month += 1\n        else:\n            break\n    return \"%d-%d-%d %s\" % (year, month, left, weekday)\n```"
+    },
+    {
+      "id": "code-h03",
+      "scorer": "code",
+      "strict": true,
+      "function": "evaluate_sheet",
+      "prompt": "Write a function evaluate_sheet(cells) that evaluates a small spreadsheet.\n\n`cells` is a dict that maps cell names (an uppercase letter followed by digits, like \"A1\" or \"C12\") to strings. Each string is one of:\n- An integer literal such as \"42\" or \"-7\".\n- A formula: \"=\" followed by one or more terms joined by \"+\" or \"-\" with no spaces, such as \"=A1+B2-3\". Each term is either a non-negative integer or a cell name. The first term never has a sign in front of it.\n\nRules:\n- A reference to a cell name that is not a key in `cells` counts as 0.\n- A cell is \"bad\" if it is part of a reference cycle (including a cell that refers to itself), or if it refers, directly or through other cells, to a bad cell.\n\nReturn a dict with the same keys. Each value is the cell's integer result, or the string \"#CYCLE\" if the cell is bad.\n\nExample: evaluate_sheet({\"A1\": \"5\", \"A2\": \"=A1+A1-2\", \"A3\": \"=A3+1\", \"A4\": \"=A3+A1\", \"A5\": \"=Z9+1\"}) returns {\"A1\": 5, \"A2\": 8, \"A3\": \"#CYCLE\", \"A4\": \"#CYCLE\", \"A5\": 1}.",
+      "tests": [
+        [
+          [
+            {
+              "A1": "5",
+              "A2": "=A1+A1-2",
+              "A3": "=A3+1",
+              "A4": "=A3+A1",
+              "A5": "=Z9+1"
+            }
+          ],
+          {
+            "A1": 5,
+            "A2": 8,
+            "A3": "#CYCLE",
+            "A4": "#CYCLE",
+            "A5": 1
+          }
+        ],
+        [
+          [
+            {}
+          ],
+          {}
+        ],
+        [
+          [
+            {
+              "A1": "-7"
+            }
+          ],
+          {
+            "A1": -7
+          }
+        ],
+        [
+          [
+            {
+              "A1": "=A1"
+            }
+          ],
+          {
+            "A1": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "A1": "=B1",
+              "B1": "=A1"
+            }
+          ],
+          {
+            "A1": "#CYCLE",
+            "B1": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "A1": "=B1",
+              "B1": "=C1",
+              "C1": "=A1",
+              "D1": "=B1+1",
+              "E1": "=7"
+            }
+          ],
+          {
+            "A1": "#CYCLE",
+            "B1": "#CYCLE",
+            "C1": "#CYCLE",
+            "D1": "#CYCLE",
+            "E1": 7
+          }
+        ],
+        [
+          [
+            {
+              "A1": "=10-3-2",
+              "B1": "=A1-A1",
+              "C1": "=0-A1"
+            }
+          ],
+          {
+            "A1": 5,
+            "B1": 0,
+            "C1": -5
+          }
+        ],
+        [
+          [
+            {
+              "B2": "=A1+A1+A1",
+              "A1": "=C3-1",
+              "C3": "4"
+            }
+          ],
+          {
+            "B2": 9,
+            "A1": 3,
+            "C3": 4
+          }
+        ],
+        [
+          [
+            {
+              "A1": "=B1+C1",
+              "B1": "=D1",
+              "C1": "=D1",
+              "D1": "3"
+            }
+          ],
+          {
+            "A1": 6,
+            "B1": 3,
+            "C1": 3,
+            "D1": 3
+          }
+        ],
+        [
+          [
+            {
+              "A1": "=A2",
+              "A2": "=A3",
+              "A3": "=A4",
+              "A4": "=A5",
+              "A5": "=A2+1",
+              "A6": "=A1",
+              "A7": "=9-A9"
+            }
+          ],
+          {
+            "A1": "#CYCLE",
+            "A2": "#CYCLE",
+            "A3": "#CYCLE",
+            "A4": "#CYCLE",
+            "A5": "#CYCLE",
+            "A6": "#CYCLE",
+            "A7": 9
+          }
+        ],
+        [
+          [
+            {
+              "A10": "=A1+1",
+              "A1": "=A10+1",
+              "A100": "12",
+              "B1": "=A100-A11"
+            }
+          ],
+          {
+            "A10": "#CYCLE",
+            "A1": "#CYCLE",
+            "A100": 12,
+            "B1": 12
+          }
+        ],
+        [
+          [
+            {
+              "C3": "-8",
+              "B3": "=B3-B3",
+              "A1": "=C3+A1"
+            }
+          ],
+          {
+            "C3": -8,
+            "B3": "#CYCLE",
+            "A1": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "A3": "=16",
+              "C2": "=E9",
+              "C3": "31",
+              "B3": "=B3"
+            }
+          ],
+          {
+            "A3": 16,
+            "C2": 0,
+            "C3": 31,
+            "B3": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "A3": "=A3",
+              "A4": "=16-2-15",
+              "C2": "6",
+              "C1": "=A4+22"
+            }
+          ],
+          {
+            "A3": "#CYCLE",
+            "A4": -1,
+            "C2": 6,
+            "C1": 21
+          }
+        ],
+        [
+          [
+            {
+              "A2": "=A2-2",
+              "B1": "-16",
+              "A1": "=E9",
+              "C4": "=B1-8+B1"
+            }
+          ],
+          {
+            "A2": "#CYCLE",
+            "B1": -16,
+            "A1": 0,
+            "C4": -40
+          }
+        ],
+        [
+          [
+            {
+              "A2": "=A2+A2+E9",
+              "B2": "11",
+              "A4": "46",
+              "B1": "-18"
+            }
+          ],
+          {
+            "A2": "#CYCLE",
+            "B2": 11,
+            "A4": 46,
+            "B1": -18
+          }
+        ],
+        [
+          [
+            {
+              "C2": "=C2+E9",
+              "D4": "49",
+              "A1": "=B3",
+              "B4": "=C2+3+B4",
+              "C4": "=B2-1",
+              "B2": "=4-0",
+              "B3": "=B3"
+            }
+          ],
+          {
+            "C2": "#CYCLE",
+            "D4": 49,
+            "A1": "#CYCLE",
+            "B4": "#CYCLE",
+            "C4": 3,
+            "B2": 4,
+            "B3": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "C1": "=D3",
+              "D4": "=A1+15-17",
+              "D3": "=B2-3+5",
+              "B2": "=14-A1",
+              "A1": "=B2",
+              "A2": "=A2+3"
+            }
+          ],
+          {
+            "C1": "#CYCLE",
+            "D4": "#CYCLE",
+            "D3": "#CYCLE",
+            "B2": "#CYCLE",
+            "A1": "#CYCLE",
+            "A2": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "C4": "=B3-C4",
+              "B4": "=E9",
+              "B3": "=B4-C4-C4"
+            }
+          ],
+          {
+            "C4": "#CYCLE",
+            "B4": 0,
+            "B3": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "B3": "47",
+              "C1": "=24+6+E9",
+              "C3": "-11",
+              "D4": "-18",
+              "B4": "=B4-B3",
+              "C4": "=C1-E9-28"
+            }
+          ],
+          {
+            "B3": 47,
+            "C1": 30,
+            "C3": -11,
+            "D4": -18,
+            "B4": "#CYCLE",
+            "C4": 2
+          }
+        ],
+        [
+          [
+            {
+              "C4": "41",
+              "D2": "=D2",
+              "D3": "=C4+12",
+              "B3": "=B3+E9+28",
+              "A1": "=C4-D3+21",
+              "C1": "45",
+              "C3": "=D3+D3-16"
+            }
+          ],
+          {
+            "C4": 41,
+            "D2": "#CYCLE",
+            "D3": 53,
+            "B3": "#CYCLE",
+            "A1": 9,
+            "C1": 45,
+            "C3": 90
+          }
+        ],
+        [
+          [
+            {
+              "C4": "=20",
+              "A3": "30",
+              "D2": "=C4-E9+15"
+            }
+          ],
+          {
+            "C4": 20,
+            "A3": 30,
+            "D2": 35
+          }
+        ],
+        [
+          [
+            {
+              "D2": "=1+C4+E9",
+              "D1": "-13",
+              "A1": "=D1",
+              "A3": "=E9+7",
+              "C4": "-14",
+              "A2": "=A2-A2-D2"
+            }
+          ],
+          {
+            "D2": -13,
+            "D1": -13,
+            "A1": -13,
+            "A3": 7,
+            "C4": -14,
+            "A2": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "B1": "=D4",
+              "D4": "=B3",
+              "D1": "14",
+              "B3": "16",
+              "A4": "=7-D1-A4"
+            }
+          ],
+          {
+            "B1": 16,
+            "D4": 16,
+            "D1": 14,
+            "B3": 16,
+            "A4": "#CYCLE"
+          }
+        ],
+        [
+          [
+            {
+              "C4": "=C3",
+              "D2": "=D2+D2",
+              "C3": "18",
+              "B1": "=0"
+            }
+          ],
+          {
+            "C4": 18,
+            "D2": "#CYCLE",
+            "C3": 18,
+            "B1": 0
+          }
+        ]
+      ],
+      "reference": "```python\ndef evaluate_sheet(cells):\n    import re\n    result, state = {}, {}\n\n    def value(name):\n        if name not in cells:\n            return 0\n        if name in result:\n            return result[name]\n        if state.get(name) == \"busy\":\n            return None\n        state[name] = \"busy\"\n        text = cells[name]\n        if not text.startswith(\"=\"):\n            answer = int(text)\n        else:\n            answer = 0\n            for sign, term in re.findall(r\"([+-]?)([A-Z][0-9]+|[0-9]+)\", text[1:]):\n                v = int(term) if term.isdigit() else value(term)\n                if v is None or v == \"#CYCLE\":\n                    answer = \"#CYCLE\"\n                    break\n                answer += -v if sign == \"-\" else v\n        state[name] = \"done\"\n        result[name] = answer\n        return answer\n\n    for name in cells:\n        value(name)\n    return {name: result[name] for name in cells}\n```"
+    },
+    {
+      "id": "code-h04",
+      "scorer": "code",
+      "strict": true,
+      "function": "corners_result",
+      "prompt": "Write a function corners_result(moves) that referees the game Corners.\n\nCorners is played on a 4 by 4 grid. Columns are lettered A to D and rows are numbered 1 to 4, so the 16 cells are named \"A1\" to \"D4\" (uppercase letter, then digit). Two players, X and O, take turns claiming one empty cell. X makes move 1, O makes move 2, and so on. A player wins the moment they own all four corner cells of a rectangle whose sides are parallel to the grid. The rectangle must span two different columns and two different rows; squares count.\n\n`moves` is a list of strings, the cells claimed in order. Number the moves starting from 1. Go through them in order:\n- If a move is not one of the 16 valid cell names exactly as written above (for example \"E1\", \"A5\", \"b3\" or \"\"), or the cell is already claimed, or the game was already won by an earlier move, stop and return \"invalid move K\" where K is that move's number.\n- Otherwise the cell is claimed, and if that completes a rectangle for the player who moved, the game is won on that move.\n\nIf every move was valid: return \"X wins on move K\" or \"O wins on move K\" if the game was won (K is the winning move's number), \"draw\" if all 16 cells are claimed with no winner, and \"unfinished\" otherwise.\n\nExample: corners_result([\"A1\", \"B1\", \"A3\", \"B2\", \"C1\", \"D4\", \"C3\"]) returns \"X wins on move 7\".",
       "tests": [
         [
           [
             [
-              4,
-              9,
-              9,
-              2
+              "A1",
+              "B1",
+              "A3",
+              "B2",
+              "C1",
+              "D4",
+              "C3"
             ]
           ],
-          4
-        ],
-        [
-          [
-            [
-              1
-            ]
-          ],
-          null
+          "X wins on move 7"
         ],
         [
           [
             []
           ],
-          null
+          "unfinished"
         ],
         [
           [
             [
-              5,
-              5,
-              5
+              "A1"
             ]
           ],
-          null
+          "unfinished"
         ],
         [
           [
             [
-              -1,
-              -2,
-              -3
+              "A1",
+              "A1"
             ]
           ],
-          -2
+          "invalid move 2"
         ],
         [
           [
             [
-              10,
-              9
+              "E1"
             ]
           ],
-          9
+          "invalid move 1"
         ],
         [
           [
             [
-              3,
-              1,
-              3,
-              2,
-              2
+              "A1",
+              "b3"
             ]
           ],
-          2
+          "invalid move 2"
+        ],
+        [
+          [
+            [
+              "A1",
+              "B2",
+              ""
+            ]
+          ],
+          "invalid move 3"
+        ],
+        [
+          [
+            [
+              "A1",
+              "B1",
+              "A3",
+              "B2",
+              "C1",
+              "D4",
+              "C3",
+              "D1"
+            ]
+          ],
+          "invalid move 8"
+        ],
+        [
+          [
+            [
+              "A1",
+              "B1",
+              "A2",
+              "B2",
+              "D4",
+              "C1",
+              "D3",
+              "C2"
+            ]
+          ],
+          "O wins on move 8"
+        ],
+        [
+          [
+            [
+              "A1",
+              "A5"
+            ]
+          ],
+          "invalid move 2"
+        ],
+        [
+          [
+            [
+              "A1",
+              "B2",
+              "A10"
+            ]
+          ],
+          "invalid move 3"
+        ],
+        [
+          [
+            [
+              "A1",
+              "B1",
+              "A2",
+              "B2",
+              "C3",
+              "D4",
+              "B3",
+              "C1",
+              "D2",
+              "C2"
+            ]
+          ],
+          "O wins on move 10"
+        ],
+        [
+          [
+            [
+              "C2",
+              "C3",
+              "C4",
+              "B1",
+              "B3",
+              "D1",
+              "A1",
+              "A4",
+              "D4",
+              "B2",
+              "C1"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B1",
+              "D4",
+              "B2",
+              "B4",
+              "C3"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B2",
+              "D2",
+              "C3",
+              "D1",
+              "B4",
+              "A3",
+              "D4",
+              "A2",
+              "B3",
+              "D3"
+            ]
+          ],
+          "O wins on move 10"
+        ],
+        [
+          [
+            [
+              "C1",
+              "B3",
+              "C2",
+              "A1",
+              "B4"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B3",
+              "B4",
+              "C2",
+              "C1",
+              "D4",
+              "D3",
+              "C3",
+              "A1",
+              "B2",
+              "B2",
+              "A4",
+              "A2",
+              "C4"
+            ]
+          ],
+          "invalid move 10"
+        ],
+        [
+          [
+            [
+              "B2",
+              "B1",
+              "A4",
+              "A2",
+              "C4",
+              "A3",
+              "C3",
+              "D2",
+              "A1",
+              "D1",
+              "B4",
+              "B3",
+              "C2",
+              "D4",
+              "D3",
+              "C1"
+            ]
+          ],
+          "invalid move 14"
+        ],
+        [
+          [
+            [
+              "B3",
+              "B4",
+              "D2",
+              "B1",
+              "C4",
+              "A2",
+              "C2",
+              "B2"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B1",
+              "C4",
+              "A1",
+              "C2"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "A2",
+              "D1",
+              "C4",
+              "D4",
+              "D3",
+              "B1",
+              "C1",
+              "D2",
+              "C3",
+              "C2"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B1",
+              "B2",
+              "B4",
+              "B3"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "A3",
+              "A1",
+              "D4",
+              "C3",
+              "C2",
+              "B3",
+              "B4",
+              "B3",
+              "C4"
+            ]
+          ],
+          "invalid move 8"
+        ],
+        [
+          [
+            [
+              "D1",
+              "A2",
+              "D4",
+              "B1",
+              "B4",
+              "B3",
+              "D3",
+              "C2",
+              "C3",
+              "B2",
+              "A4",
+              "A1",
+              "A3",
+              "C4",
+              "C1"
+            ]
+          ],
+          "invalid move 13"
+        ],
+        [
+          [
+            [
+              "A1",
+              "B2",
+              "D1",
+              "A3",
+              "A2",
+              "A4",
+              "B1",
+              "C3"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "C3",
+              "A3",
+              "A4",
+              "B3",
+              "A2",
+              "C4"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "D2",
+              "A3",
+              "B2",
+              "C1",
+              "A1",
+              "C3",
+              "C4",
+              "B3",
+              "D1",
+              "B4",
+              "D4",
+              "A3"
+            ]
+          ],
+          "invalid move 12"
+        ],
+        [
+          [
+            [
+              "A4",
+              "C1",
+              "C4",
+              "A3",
+              "B4",
+              "B2",
+              "A4"
+            ]
+          ],
+          "invalid move 7"
+        ],
+        [
+          [
+            [
+              "C3",
+              "A4",
+              "D1",
+              "B1",
+              "D2",
+              "A2",
+              "A1",
+              "B3",
+              "C4",
+              "D3",
+              "A1",
+              "B4",
+              "D4",
+              "C2",
+              "A3",
+              "C1"
+            ]
+          ],
+          "invalid move 11"
+        ],
+        [
+          [
+            [
+              "C3",
+              "A2",
+              "B1",
+              "A3",
+              "A2",
+              "C2",
+              "B4",
+              "A1",
+              "D2",
+              "D1",
+              "C4",
+              "D4",
+              "C1"
+            ]
+          ],
+          "invalid move 5"
+        ],
+        [
+          [
+            [
+              "B4",
+              "C3",
+              "B2",
+              "B1",
+              "C1",
+              "C4",
+              "D1",
+              "A4",
+              "D4",
+              "A2"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "D2",
+              "A3",
+              "B1",
+              "B2",
+              "A1",
+              "C1",
+              "D4",
+              "B3"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "D3",
+              "A1",
+              "C1",
+              "D2",
+              "D4",
+              "D1",
+              "C3",
+              "B1",
+              "A3"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B1",
+              "A3",
+              "B2",
+              "D4"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "B3",
+              "C1",
+              "A4",
+              "D2",
+              "C1",
+              "A1",
+              "D1",
+              "C2",
+              "D4",
+              "A2",
+              "B2",
+              "D3",
+              "B1",
+              "C3",
+              "C4",
+              "B4",
+              "A3"
+            ]
+          ],
+          "invalid move 5"
+        ],
+        [
+          [
+            [
+              "B3",
+              "A3",
+              "D1",
+              "D3",
+              "B2",
+              "B1",
+              "C3",
+              "C4",
+              "C1",
+              "C2",
+              "B4",
+              "A1"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "A4",
+              "D2",
+              "D1",
+              "B2",
+              "B3",
+              "C2",
+              "C1",
+              "A2",
+              "C4",
+              "D3",
+              "C3",
+              "B4",
+              "A3",
+              "D4"
+            ]
+          ],
+          "invalid move 14"
+        ],
+        [
+          [
+            [
+              "D1",
+              "C1",
+              "A2",
+              "D4",
+              "B2",
+              "B3",
+              "D3",
+              "C4",
+              "C3",
+              "A3",
+              "B1",
+              "A1"
+            ]
+          ],
+          "unfinished"
+        ],
+        [
+          [
+            [
+              "A1",
+              "C1",
+              "B1",
+              "D1",
+              "A2",
+              "B2",
+              "C2",
+              "D2",
+              "B3",
+              "A3",
+              "C3",
+              "D3",
+              "A4",
+              "B4",
+              "D4",
+              "C4"
+            ]
+          ],
+          "draw"
+        ],
+        [
+          [
+            [
+              "A1",
+              "C1",
+              "B1",
+              "D1",
+              "A2",
+              "B2",
+              "C2",
+              "D2",
+              "B3",
+              "A3",
+              "C3",
+              "D3",
+              "A4",
+              "B4",
+              "D4",
+              "C4",
+              "A1"
+            ]
+          ],
+          "invalid move 17"
         ]
       ],
-      "reference": "```python\ndef second_largest(nums):\n    vals = sorted(set(nums))\n    return vals[-2] if len(vals) >= 2 else None\n```"
+      "reference": "```python\ndef corners_result(moves):\n    valid = {c + r for c in \"ABCD\" for r in \"1234\"}\n    owned = {\"X\": set(), \"O\": set()}\n    taken = set()\n    winner = None\n    for k, move in enumerate(moves, 1):\n        if not isinstance(move, str) or move not in valid or move in taken or winner:\n            return \"invalid move %d\" % k\n        player = \"X\" if k % 2 == 1 else \"O\"\n        taken.add(move)\n        mine = owned[player]\n        mine.add(move)\n        col, row = move[0], move[1]\n        for c2 in \"ABCD\":\n            for r2 in \"1234\":\n                if c2 != col and r2 != row and c2 + row in mine and col + r2 in mine and c2 + r2 in mine:\n                    winner = (player, k)\n    if winner:\n        return \"%s wins on move %d\" % winner\n    return \"draw\" if len(taken) == 16 else \"unfinished\"\n```"
     },
     {
-      "id": "code-003",
+      "id": "code-h05",
       "scorer": "code",
-      "function": "is_balanced",
-      "prompt": "Write a function is_balanced(s) that returns True if every bracket in the string is correctly opened, closed and nested, and False otherwise. The brackets are (), [] and {}. Every other character is ignored. Example: is_balanced('a(b[c]{d})') returns True and is_balanced('(]') returns False.",
-      "tests": [
-        [
-          [
-            "a(b[c]{d})"
-          ],
-          true
-        ],
-        [
-          [
-            "(]"
-          ],
-          false
-        ],
-        [
-          [
-            ""
-          ],
-          true
-        ],
-        [
-          [
-            "(("
-          ],
-          false
-        ],
-        [
-          [
-            "())"
-          ],
-          false
-        ],
-        [
-          [
-            "{[()]}"
-          ],
-          true
-        ],
-        [
-          [
-            "{[(])}"
-          ],
-          false
-        ],
-        [
-          [
-            "no brackets"
-          ],
-          true
-        ],
-        [
-          [
-            "]["
-          ],
-          false
-        ]
-      ],
-      "reference": "```python\ndef is_balanced(s):\n    pairs = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for ch in s:\n        if ch in '([{':\n            stack.append(ch)\n        elif ch in pairs:\n            if not stack or stack.pop() != pairs[ch]:\n                return False\n    return not stack\n```"
-    },
-    {
-      "id": "code-004",
-      "scorer": "code",
-      "function": "rotate_grid",
-      "prompt": "Write a function rotate_grid(grid) that takes a rectangular list of lists and returns a new grid rotated 90 degrees clockwise. Example: rotate_grid([[1, 2], [3, 4]]) returns [[3, 1], [4, 2]]. The grid may not be square. An empty grid returns an empty list.",
+      "strict": true,
+      "function": "trellis_best",
+      "prompt": "Write a function trellis_best(cards, k) for the card game Trellis.\n\n`cards` is a list of [colour, number] pairs. Colour is \"R\" (red), \"B\" (blue) or \"G\" (green) and number is a positive integer. Numbers and whole cards may repeat. You must choose exactly k of the cards (each card in the list can be used at most once) to form a hand, and you want the highest possible score.\n\nA hand is scored like this:\n1. Add up the numbers, with each red card counting double.\n2. If the hand contains exactly two blue cards, subtract 5.\n3. Find the highest number in the hand. If every card in the hand that has that highest number is green, add that number once more (once in total, not once per card).\n4. If the hand contains at least one card of each of the three colours, add 4.\nAn empty hand scores 0.\n\nReturn the highest score possible with exactly k cards. Return None if k is greater than the number of cards. The list has at most 12 cards.\n\nExample: trellis_best([[\"R\", 3], [\"B\", 7], [\"G\", 9], [\"B\", 2], [\"R\", 4]], 5) returns 40.",
       "tests": [
         [
           [
             [
               [
-                1,
+                "R",
+                3
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "G",
+                9
+              ],
+              [
+                "B",
                 2
               ],
               [
-                3,
+                "R",
                 4
               ]
-            ]
-          ],
-          [
-            [
-              3,
-              1
             ],
-            [
-              4,
-              2
-            ]
-          ]
+            5
+          ],
+          40
+        ],
+        [
+          [
+            [],
+            0
+          ],
+          0
+        ],
+        [
+          [
+            [],
+            1
+          ],
+          null
         ],
         [
           [
             [
               [
-                1,
-                2,
-                3
+                "G",
+                5
               ]
-            ]
+            ],
+            1
           ],
-          [
-            [
-              1
-            ],
-            [
-              2
-            ],
-            [
-              3
-            ]
-          ]
+          10
         ],
         [
           [
             [
               [
+                "G",
+                5
+              ],
+              [
+                "G",
+                5
+              ]
+            ],
+            2
+          ],
+          15
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                5
+              ],
+              [
+                "R",
+                5
+              ]
+            ],
+            2
+          ],
+          15
+        ],
+        [
+          [
+            [
+              [
+                "B",
                 1
               ],
               [
+                "B",
                 2
               ],
               [
+                "B",
                 3
               ]
-            ]
+            ],
+            2
           ],
-          [
-            [
-              3,
-              2,
-              1
-            ]
-          ]
-        ],
-        [
-          [
-            []
-          ],
-          []
+          0
         ],
         [
           [
             [
               [
-                1,
-                2,
-                3
+                "B",
+                1
               ],
               [
-                4,
-                5,
-                6
+                "B",
+                2
+              ],
+              [
+                "B",
+                3
               ]
-            ]
+            ],
+            3
           ],
-          [
-            [
-              4,
-              1
-            ],
-            [
-              5,
-              2
-            ],
-            [
-              6,
-              3
-            ]
-          ]
+          6
         ],
         [
           [
             [
               [
-                "a"
+                "R",
+                1
               ]
-            ]
+            ],
+            0
           ],
-          [
-            [
-              "a"
-            ]
-          ]
-        ]
-      ],
-      "reference": "```python\ndef rotate_grid(grid):\n    return [list(row) for row in zip(*grid[::-1])]\n```"
-    },
-    {
-      "id": "code-005",
-      "scorer": "code",
-      "function": "merge_intervals",
-      "prompt": "Write a function merge_intervals(intervals) that takes a list of [start, end] pairs of integers and returns a list of merged intervals sorted by start. Intervals that overlap or touch (one ends where another starts) are merged. Example: merge_intervals([[5, 8], [1, 3], [2, 4]]) returns [[1, 4], [5, 8]].",
-      "tests": [
+          0
+        ],
         [
           [
             [
               [
-                5,
+                "R",
+                2
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "G",
+                2
+              ]
+            ],
+            3
+          ],
+          12
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                2
+              ],
+              [
+                "B",
+                6
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "B",
                 8
               ],
               [
-                1,
+                "R",
+                5
+              ],
+              [
+                "R",
+                4
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "R",
+                8
+              ]
+            ],
+            4
+          ],
+          48
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                5
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "G",
+                1
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "R",
+                6
+              ]
+            ],
+            0
+          ],
+          0
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                7
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "G",
+                5
+              ],
+              [
+                "G",
+                5
+              ],
+              [
+                "G",
+                4
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "R",
+                4
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "B",
+                2
+              ]
+            ],
+            1
+          ],
+          18
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                6
+              ],
+              [
+                "B",
+                8
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "G",
+                5
+              ]
+            ],
+            3
+          ],
+          30
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                8
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "R",
+                4
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "G",
+                5
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "B",
+                6
+              ]
+            ],
+            6
+          ],
+          68
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                6
+              ],
+              [
+                "B",
+                4
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "G",
                 3
               ],
               [
-                2,
+                "G",
                 4
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "G",
+                7
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "G",
+                5
+              ],
+              [
+                "B",
+                2
+              ]
+            ],
+            5
+          ],
+          55
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                8
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "G",
+                8
+              ],
+              [
+                "B",
+                8
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "G",
+                9
+              ],
+              [
+                "R",
+                2
+              ]
+            ],
+            6
+          ],
+          56
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                6
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "G",
+                4
+              ],
+              [
+                "G",
+                7
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "B",
+                6
+              ],
+              [
+                "B",
+                6
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "R",
+                1
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "B",
+                2
+              ]
+            ],
+            7
+          ],
+          62
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                6
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "B",
+                6
+              ],
+              [
+                "G",
+                7
+              ]
+            ],
+            6
+          ],
+          null
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                9
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "R",
+                8
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "B",
+                1
+              ]
+            ],
+            1
+          ],
+          18
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                7
+              ],
+              [
+                "G",
+                8
+              ],
+              [
+                "G",
+                3
+              ],
+              [
+                "G",
+                6
+              ]
+            ],
+            2
+          ],
+          23
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                7
+              ],
+              [
+                "G",
+                7
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "G",
+                1
+              ],
+              [
+                "R",
+                2
+              ]
+            ],
+            1
+          ],
+          14
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                6
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "R",
+                4
+              ],
+              [
+                "B",
+                1
+              ]
+            ],
+            4
+          ],
+          32
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                7
+              ],
+              [
+                "G",
+                1
+              ],
+              [
+                "R",
+                8
+              ],
+              [
+                "R",
+                8
+              ],
+              [
+                "G",
+                2
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "R",
+                1
+              ]
+            ],
+            0
+          ],
+          0
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                7
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "B",
+                4
+              ],
+              [
+                "G",
+                9
+              ],
+              [
+                "R",
+                3
+              ]
+            ],
+            6
+          ],
+          59
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                1
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "B",
+                4
+              ]
+            ],
+            6
+          ],
+          null
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                1
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "B",
+                8
+              ],
+              [
+                "B",
+                5
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "G",
+                3
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "G",
+                3
+              ],
+              [
+                "G",
+                7
+              ]
+            ],
+            2
+          ],
+          24
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                7
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "R",
+                1
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "G",
+                2
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "G",
+                7
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "R",
+                2
+              ]
+            ],
+            1
+          ],
+          14
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                8
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "R",
+                1
+              ]
+            ],
+            4
+          ],
+          52
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                5
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "B",
+                5
+              ],
+              [
+                "B",
+                6
+              ],
+              [
+                "B",
+                5
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "B",
+                5
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "R",
+                8
+              ],
+              [
+                "B",
+                8
+              ]
+            ],
+            2
+          ],
+          28
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                3
+              ],
+              [
+                "G",
+                1
+              ],
+              [
+                "R",
+                3
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "B",
+                8
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "B",
+                6
+              ],
+              [
+                "G",
+                2
+              ]
+            ],
+            5
+          ],
+          45
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                2
+              ],
+              [
+                "G",
+                5
+              ],
+              [
+                "G",
+                7
+              ]
+            ],
+            0
+          ],
+          0
+        ],
+        [
+          [
+            [
+              [
+                "G",
+                8
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "G",
+                4
+              ],
+              [
+                "R",
+                9
+              ]
+            ],
+            3
+          ],
+          38
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                7
+              ],
+              [
+                "G",
+                9
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "G",
+                1
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "B",
+                4
+              ],
+              [
+                "G",
+                2
+              ],
+              [
+                "B",
+                1
+              ],
+              [
+                "G",
+                8
+              ],
+              [
+                "B",
+                6
+              ]
+            ],
+            2
+          ],
+          32
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                4
+              ],
+              [
+                "R",
+                9
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "B",
+                7
+              ],
+              [
+                "R",
+                4
+              ],
+              [
+                "G",
+                1
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "G",
+                3
+              ],
+              [
+                "R",
+                1
+              ]
+            ],
+            4
+          ],
+          45
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                5
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "R",
+                2
+              ],
+              [
+                "B",
+                4
+              ],
+              [
+                "B",
+                3
+              ]
+            ],
+            2
+          ],
+          14
+        ],
+        [
+          [
+            [
+              [
+                "R",
+                8
+              ],
+              [
+                "G",
+                7
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "R",
+                7
+              ],
+              [
+                "B",
+                3
+              ],
+              [
+                "B",
+                2
+              ],
+              [
+                "B",
+                4
+              ],
+              [
+                "R",
+                9
+              ]
+            ],
+            6
+          ],
+          77
+        ],
+        [
+          [
+            [
+              [
+                "B",
+                9
+              ],
+              [
+                "R",
+                5
+              ],
+              [
+                "R",
+                8
+              ],
+              [
+                "G",
+                6
+              ],
+              [
+                "G",
+                2
+              ],
+              [
+                "G",
+                8
+              ],
+              [
+                "B",
+                9
+              ],
+              [
+                "R",
+                6
+              ],
+              [
+                "R",
+                3
+              ]
+            ],
+            4
+          ],
+          49
+        ]
+      ],
+      "reference": "```python\ndef trellis_best(cards, k):\n    from itertools import combinations\n    if k > len(cards):\n        return None\n\n    def score(hand):\n        if not hand:\n            return 0\n        total = sum(n * 2 if c == \"R\" else n for c, n in hand)\n        if sum(1 for c, n in hand if c == \"B\") == 2:\n            total -= 5\n        top = max(n for c, n in hand)\n        if all(c == \"G\" for c, n in hand if n == top):\n            total += top\n        if {c for c, n in hand} == {\"R\", \"B\", \"G\"}:\n            total += 4\n        return total\n\n    return max(score(hand) for hand in combinations(cards, k))\n```"
+    },
+    {
+      "id": "code-h06",
+      "scorer": "code",
+      "strict": true,
+      "function": "earliest_arrival",
+      "prompt": "Write a function earliest_arrival(lines, start, goal, time, transfer) that plans a train journey.\n\n`lines` is a list of dicts. Each dict describes one train line with three keys:\n- \"stops\": a list of station names, in the order trains visit them (at least 2, no repeats within a line).\n- \"minutes\": a list of travel times in whole minutes between consecutive stops (one fewer entry than \"stops\").\n- \"departures\": a list of times, in minutes after midnight, at which a train leaves the first stop.\nEach departure is a separate train. Trains only travel forward along their line. They do not wait at stations: a train leaves each stop at the same minute it arrives there. A station may appear on several lines.\n\nYou are standing at station `start` at minute `time`. For the first train of your journey you may board any train that leaves `start` at minute `time` or later. Every later time you board a train (a different departure, even one on the same line) you need a margin: it must leave at least `transfer` minutes after you arrived at that station. Staying on the same train through a stop needs no margin. You may get off at any stop and you may wait as long as you like.\n\nReturn the earliest minute at which you can be at `goal`, or None if it cannot be reached. If start equals goal, return `time`.\n\nExample: with lines = [{\"stops\": [\"A\", \"B\", \"C\"], \"minutes\": [10, 10], \"departures\": [0, 30]}, {\"stops\": [\"B\", \"D\"], \"minutes\": [5], \"departures\": [12, 45]}], earliest_arrival(lines, \"A\", \"D\", 0, 3) returns 50, because the train from A reaches B at minute 10, and the 12 departure is too soon to catch with a 3 minute margin.",
+      "tests": [
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "A",
+            "D",
+            0,
+            3
+          ],
+          50
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "A",
+            "D",
+            0,
+            2
+          ],
+          17
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "A",
+            "A",
+            17,
+            3
+          ],
+          17
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "D",
+            "A",
+            0,
+            3
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "A",
+            "D",
+            31,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "B",
+            "D",
+            12,
+            99
+          ],
+          17
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "B",
+            "D",
+            13,
+            0
+          ],
+          50
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  0,
+                  30
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "D"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  12,
+                  45
+                ]
+              }
+            ],
+            "A",
+            "C",
+            1,
+            5
+          ],
+          50
+        ],
+        [
+          [
+            [],
+            "A",
+            "B",
+            0,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  5,
+                  5
+                ],
+                "departures": [
+                  0
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "C"
+                ],
+                "minutes": [
+                  1
+                ],
+                "departures": [
+                  5,
+                  6
+                ]
+              }
+            ],
+            "A",
+            "C",
+            0,
+            1
+          ],
+          7
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "A",
+                  "B"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  0,
+                  20
+                ]
+              },
+              {
+                "stops": [
+                  "B",
+                  "A"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  6,
+                  26
+                ]
+              },
+              {
+                "stops": [
+                  "A",
+                  "C"
+                ],
+                "minutes": [
+                  1
+                ],
+                "departures": [
+                  10,
+                  12,
+                  31
+                ]
+              }
+            ],
+            "B",
+            "C",
+            0,
+            2
+          ],
+          32
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "T",
+                  "S",
+                  "V",
+                  "R"
+                ],
+                "minutes": [
+                  7,
+                  4,
+                  11
+                ],
+                "departures": [
+                  25,
+                  45
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "P",
+                  "T",
+                  "V"
+                ],
+                "minutes": [
+                  4,
+                  7,
+                  11
+                ],
+                "departures": [
+                  5,
+                  40,
+                  61
+                ]
+              }
+            ],
+            "V",
+            "S",
+            0,
+            5
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "P",
+                  "R",
+                  "Q",
+                  "U"
+                ],
+                "minutes": [
+                  8,
+                  7,
+                  3
+                ],
+                "departures": [
+                  16,
+                  39,
+                  51
+                ]
+              },
+              {
+                "stops": [
+                  "P",
+                  "R",
+                  "Q",
+                  "V"
+                ],
+                "minutes": [
+                  9,
+                  2,
+                  4
+                ],
+                "departures": [
+                  6,
+                  28,
+                  48,
+                  62
+                ]
+              }
+            ],
+            "Q",
+            "P",
+            8,
+            4
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "P",
+                  "V",
+                  "R"
+                ],
+                "minutes": [
+                  6,
+                  2
+                ],
+                "departures": [
+                  79
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "T"
+                ],
+                "minutes": [
+                  6
+                ],
+                "departures": [
+                  1
+                ]
+              },
+              {
+                "stops": [
+                  "P",
+                  "Q",
+                  "R",
+                  "T"
+                ],
+                "minutes": [
+                  2,
+                  7,
+                  1
+                ],
+                "departures": [
+                  59
+                ]
+              }
+            ],
+            "R",
+            "T",
+            32,
+            5
+          ],
+          69
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "T",
+                  "P",
+                  "S",
+                  "R"
+                ],
+                "minutes": [
+                  1,
+                  11,
+                  6
+                ],
+                "departures": [
+                  30,
+                  32,
+                  47,
+                  83
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "R",
+                  "U",
+                  "Q"
+                ],
+                "minutes": [
+                  11,
+                  6,
+                  4
+                ],
+                "departures": [
+                  80
+                ]
+              },
+              {
+                "stops": [
+                  "V",
+                  "U"
+                ],
+                "minutes": [
+                  6
+                ],
+                "departures": [
+                  15
+                ]
+              }
+            ],
+            "S",
+            "S",
+            16,
+            0
+          ],
+          16
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "R",
+                  "U",
+                  "Q",
+                  "V"
+                ],
+                "minutes": [
+                  6,
+                  6,
+                  7
+                ],
+                "departures": [
+                  5,
+                  34,
+                  37,
+                  38
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "U",
+                  "V",
+                  "Q"
+                ],
+                "minutes": [
+                  10,
+                  8,
+                  6
+                ],
+                "departures": [
+                  2,
+                  14,
+                  21,
+                  31
+                ]
+              },
+              {
+                "stops": [
+                  "T",
+                  "S",
+                  "U",
+                  "Q"
+                ],
+                "minutes": [
+                  5,
+                  11,
+                  10
+                ],
+                "departures": [
+                  38
+                ]
+              }
+            ],
+            "S",
+            "V",
+            13,
+            4
+          ],
+          32
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "T",
+                  "S"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  37
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "V",
+                  "T"
+                ],
+                "minutes": [
+                  10,
+                  10
+                ],
+                "departures": [
+                  29,
+                  74,
+                  78
+                ]
+              }
+            ],
+            "R",
+            "T",
+            5,
+            4
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "R",
+                  "T",
+                  "Q",
+                  "P"
+                ],
+                "minutes": [
+                  7,
+                  3,
+                  8
+                ],
+                "departures": [
+                  76
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "R",
+                  "U"
+                ],
+                "minutes": [
+                  7,
+                  7
+                ],
+                "departures": [
+                  33,
+                  61,
+                  78
+                ]
+              }
+            ],
+            "T",
+            "R",
+            3,
+            3
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "Q",
+                  "U",
+                  "S",
+                  "T"
+                ],
+                "minutes": [
+                  1,
+                  3,
+                  5
+                ],
+                "departures": [
+                  8,
+                  11,
+                  33
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "Q",
+                  "T",
+                  "V"
+                ],
+                "minutes": [
+                  3,
+                  1,
+                  6
+                ],
+                "departures": [
+                  14,
+                  67,
+                  82,
+                  86
+                ]
+              },
+              {
+                "stops": [
+                  "T",
+                  "P"
+                ],
+                "minutes": [
+                  8
+                ],
+                "departures": [
+                  25,
+                  86
+                ]
+              }
+            ],
+            "Q",
+            "V",
+            9,
+            0
+          ],
+          24
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "Q",
+                  "S",
+                  "V"
+                ],
+                "minutes": [
+                  4,
+                  4
+                ],
+                "departures": [
+                  13,
+                  69,
+                  76,
+                  89
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "S",
+                  "R",
+                  "V"
+                ],
+                "minutes": [
+                  3,
+                  8,
+                  3
+                ],
+                "departures": [
+                  32,
+                  34,
+                  58,
+                  75
+                ]
+              },
+              {
+                "stops": [
+                  "R",
+                  "S"
+                ],
+                "minutes": [
+                  9
+                ],
+                "departures": [
+                  33,
+                  59,
+                  66
+                ]
+              }
+            ],
+            "S",
+            "R",
+            25,
+            3
+          ],
+          43
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "S",
+                  "R"
+                ],
+                "minutes": [
+                  8
+                ],
+                "departures": [
+                  23,
+                  25,
+                  67,
+                  85
+                ]
+              },
+              {
+                "stops": [
+                  "R",
+                  "Q",
+                  "S",
+                  "U"
+                ],
+                "minutes": [
+                  10,
+                  6,
+                  1
+                ],
+                "departures": [
+                  35,
+                  36,
+                  41,
+                  62
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "P",
+                  "Q"
+                ],
+                "minutes": [
+                  4,
+                  3
+                ],
+                "departures": [
+                  89
+                ]
+              }
+            ],
+            "P",
+            "P",
+            8,
+            3
+          ],
+          8
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "V",
+                  "S",
+                  "P",
+                  "T"
+                ],
+                "minutes": [
+                  5,
+                  9,
+                  6
+                ],
+                "departures": [
+                  40,
+                  62
+                ]
+              },
+              {
+                "stops": [
+                  "V",
+                  "S",
+                  "U"
+                ],
+                "minutes": [
+                  11,
+                  9
+                ],
+                "departures": [
+                  18,
+                  65
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "S"
+                ],
+                "minutes": [
+                  10
+                ],
+                "departures": [
+                  23,
+                  87
+                ]
+              },
+              {
+                "stops": [
+                  "R",
+                  "T",
+                  "V"
+                ],
+                "minutes": [
+                  7,
+                  9
+                ],
+                "departures": [
+                  62
+                ]
+              }
+            ],
+            "T",
+            "V",
+            8,
+            4
+          ],
+          78
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "P",
+                  "Q",
+                  "T",
+                  "S"
+                ],
+                "minutes": [
+                  1,
+                  8,
+                  9
+                ],
+                "departures": [
+                  73
+                ]
+              },
+              {
+                "stops": [
+                  "R",
+                  "S"
+                ],
+                "minutes": [
+                  7
+                ],
+                "departures": [
+                  27,
+                  40,
+                  69,
+                  80
+                ]
+              },
+              {
+                "stops": [
+                  "V",
+                  "T",
+                  "Q",
+                  "R"
+                ],
+                "minutes": [
+                  6,
+                  4,
+                  8
+                ],
+                "departures": [
+                  23,
+                  38,
+                  71,
+                  78
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "P",
+                  "U",
+                  "T"
+                ],
+                "minutes": [
+                  11,
+                  10,
+                  4
+                ],
+                "departures": [
+                  16,
+                  17,
+                  44,
+                  53
+                ]
+              }
+            ],
+            "U",
+            "V",
+            29,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "P",
+                  "S",
+                  "R",
+                  "V"
+                ],
+                "minutes": [
+                  6,
+                  9,
+                  7
+                ],
+                "departures": [
+                  47,
+                  63,
+                  70,
+                  73
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "S"
+                ],
+                "minutes": [
+                  10
+                ],
+                "departures": [
+                  9,
+                  58
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "U"
+                ],
+                "minutes": [
+                  6
+                ],
+                "departures": [
+                  67,
+                  74
+                ]
+              }
+            ],
+            "Q",
+            "T",
+            38,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "Q",
+                  "P"
+                ],
+                "minutes": [
+                  5
+                ],
+                "departures": [
+                  33,
+                  64
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "P",
+                  "R",
+                  "Q"
+                ],
+                "minutes": [
+                  3,
+                  11,
+                  3
+                ],
+                "departures": [
+                  55,
+                  88
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "P",
+                  "T"
+                ],
+                "minutes": [
+                  6,
+                  1
+                ],
+                "departures": [
+                  75,
+                  89
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "S",
+                  "R"
+                ],
+                "minutes": [
+                  10,
+                  2
+                ],
+                "departures": [
+                  16,
+                  71
+                ]
+              }
+            ],
+            "V",
+            "R",
+            7,
+            3
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "U",
+                  "P",
+                  "V",
+                  "T"
+                ],
+                "minutes": [
+                  3,
+                  7,
+                  10
+                ],
+                "departures": [
+                  74
+                ]
+              },
+              {
+                "stops": [
+                  "V",
+                  "Q",
+                  "U",
+                  "T"
+                ],
+                "minutes": [
+                  11,
+                  3,
+                  9
+                ],
+                "departures": [
+                  57
+                ]
+              }
+            ],
+            "P",
+            "P",
+            23,
+            2
+          ],
+          23
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "S",
+                  "Q",
+                  "T"
+                ],
+                "minutes": [
+                  4,
+                  10
+                ],
+                "departures": [
+                  17,
+                  47,
+                  53
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "P"
+                ],
+                "minutes": [
+                  2
+                ],
+                "departures": [
+                  8,
+                  35,
+                  47,
+                  75
+                ]
+              },
+              {
+                "stops": [
+                  "P",
+                  "R"
+                ],
+                "minutes": [
+                  2
+                ],
+                "departures": [
+                  14,
+                  31,
+                  47
+                ]
+              },
+              {
+                "stops": [
+                  "P",
+                  "Q",
+                  "T"
+                ],
+                "minutes": [
+                  8,
+                  10
+                ],
+                "departures": [
+                  20,
+                  22,
+                  38,
+                  81
+                ]
+              }
+            ],
+            "P",
+            "T",
+            28,
+            1
+          ],
+          56
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "P",
+                  "U",
+                  "T"
+                ],
+                "minutes": [
+                  2,
+                  5
+                ],
+                "departures": [
+                  6,
+                  18,
+                  64,
+                  68
+                ]
+              },
+              {
+                "stops": [
+                  "P",
+                  "T",
+                  "U"
+                ],
+                "minutes": [
+                  9,
+                  3
+                ],
+                "departures": [
+                  11,
+                  47
+                ]
+              },
+              {
+                "stops": [
+                  "V",
+                  "S",
+                  "Q",
+                  "U"
+                ],
+                "minutes": [
+                  9,
+                  4,
+                  6
+                ],
+                "departures": [
+                  19,
+                  26,
+                  70
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "R",
+                  "V",
+                  "S"
+                ],
+                "minutes": [
+                  7,
+                  3,
+                  6
+                ],
+                "departures": [
+                  82
+                ]
+              }
+            ],
+            "P",
+            "Q",
+            19,
+            2
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "Q",
+                  "R",
+                  "T",
+                  "U"
+                ],
+                "minutes": [
+                  3,
+                  7,
+                  4
+                ],
+                "departures": [
+                  14
+                ]
+              },
+              {
+                "stops": [
+                  "T",
+                  "P"
+                ],
+                "minutes": [
+                  8
+                ],
+                "departures": [
+                  34,
+                  46,
+                  48
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "R"
+                ],
+                "minutes": [
+                  9
+                ],
+                "departures": [
+                  24,
+                  52,
+                  62
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "T",
+                  "U",
+                  "Q"
+                ],
+                "minutes": [
+                  11,
+                  6,
+                  11
+                ],
+                "departures": [
+                  7,
+                  18
+                ]
+              }
+            ],
+            "T",
+            "S",
+            1,
+            3
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "U",
+                  "S",
+                  "R",
+                  "V"
+                ],
+                "minutes": [
+                  10,
+                  5,
+                  5
+                ],
+                "departures": [
+                  6
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "V",
+                  "U",
+                  "R"
+                ],
+                "minutes": [
+                  11,
+                  10,
+                  3
+                ],
+                "departures": [
+                  24,
+                  47,
+                  58
+                ]
+              }
+            ],
+            "U",
+            "U",
+            3,
+            5
+          ],
+          3
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "T",
+                  "P"
+                ],
+                "minutes": [
+                  11
+                ],
+                "departures": [
+                  11,
+                  15,
+                  20,
+                  75
+                ]
+              },
+              {
+                "stops": [
+                  "T",
+                  "Q",
+                  "R"
+                ],
+                "minutes": [
+                  4,
+                  10
+                ],
+                "departures": [
+                  52
+                ]
+              }
+            ],
+            "P",
+            "Q",
+            0,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "S",
+                  "R"
+                ],
+                "minutes": [
+                  2
+                ],
+                "departures": [
+                  5,
+                  43,
+                  58
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "R"
+                ],
+                "minutes": [
+                  6
+                ],
+                "departures": [
+                  6,
+                  9,
+                  81
+                ]
+              }
+            ],
+            "U",
+            "Q",
+            17,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "S",
+                  "P",
+                  "R"
+                ],
+                "minutes": [
+                  7,
+                  10
+                ],
+                "departures": [
+                  3,
+                  17,
+                  38,
+                  74
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "R",
+                  "T",
+                  "P"
+                ],
+                "minutes": [
+                  10,
+                  1,
+                  6
+                ],
+                "departures": [
+                  9,
+                  12,
+                  26,
+                  43
+                ]
+              },
+              {
+                "stops": [
+                  "R",
+                  "S",
+                  "P",
+                  "V"
+                ],
+                "minutes": [
+                  1,
+                  9,
+                  4
+                ],
+                "departures": [
+                  42,
+                  88
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "V"
+                ],
+                "minutes": [
+                  7
+                ],
+                "departures": [
+                  2
+                ]
+              }
+            ],
+            "P",
+            "U",
+            20,
+            0
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "T",
+                  "U"
+                ],
+                "minutes": [
+                  11
+                ],
+                "departures": [
+                  17,
+                  48
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "Q"
+                ],
+                "minutes": [
+                  3
+                ],
+                "departures": [
+                  8,
+                  16,
+                  47,
+                  81
+                ]
+              },
+              {
+                "stops": [
+                  "Q",
+                  "R"
+                ],
+                "minutes": [
+                  10
+                ],
+                "departures": [
+                  0,
+                  3,
+                  47,
+                  78
+                ]
+              }
+            ],
+            "S",
+            "V",
+            32,
+            5
+          ],
+          null
+        ],
+        [
+          [
+            [
+              {
+                "stops": [
+                  "S",
+                  "T",
+                  "P"
+                ],
+                "minutes": [
+                  1,
+                  7
+                ],
+                "departures": [
+                  16
+                ]
+              },
+              {
+                "stops": [
+                  "U",
+                  "V",
+                  "S",
+                  "T"
+                ],
+                "minutes": [
+                  11,
+                  11,
+                  3
+                ],
+                "departures": [
+                  15
+                ]
+              },
+              {
+                "stops": [
+                  "V",
+                  "Q",
+                  "P"
+                ],
+                "minutes": [
+                  2,
+                  10
+                ],
+                "departures": [
+                  3
+                ]
+              },
+              {
+                "stops": [
+                  "S",
+                  "V"
+                ],
+                "minutes": [
+                  7
+                ],
+                "departures": [
+                  28,
+                  36,
+                  42,
+                  69
+                ]
+              }
+            ],
+            "R",
+            "P",
+            17,
+            1
+          ],
+          null
+        ]
+      ],
+      "reference": "```python\ndef earliest_arrival(lines, start, goal, time, transfer):\n    import heapq\n    if start == goal:\n        return time\n    best = {start: time}\n    heap = [(time, start)]\n    while heap:\n        t, station = heapq.heappop(heap)\n        if t > best.get(station, float(\"inf\")):\n            continue\n        if station == goal:\n            return t\n        ready = t if station == start else t + transfer\n        for line in lines:\n            stops = line[\"stops\"]\n            if station not in stops:\n                continue\n            i = stops.index(station)\n            if i == len(stops) - 1:\n                continue\n            offset = sum(line[\"minutes\"][:i])\n            leaving = [d + offset for d in line[\"departures\"] if d + offset >= ready]\n            if not leaving:\n                continue\n            clock = min(leaving)\n            for j in range(i + 1, len(stops)):\n                clock += line[\"minutes\"][j - 1]\n                if clock < best.get(stops[j], float(\"inf\")):\n                    best[stops[j]] = clock\n                    heapq.heappush(heap, (clock, stops[j]))\n    return None\n```"
+    },
+    {
+      "id": "code-h07",
+      "scorer": "code",
+      "strict": true,
+      "function": "rank_teams",
+      "prompt": "Write a function rank_teams(matches) that produces a league table order.\n\n`matches` is a list of [home, away, home_goals, away_goals]. Team names are strings and the goals are whole numbers. A team is in the league if it appears in at least one match. Two teams may play each other any number of times. A win is worth 3 points, a draw 1 point each, a loss 0.\n\nOrder the teams by these rules, in order:\n1. More points first.\n2. Then better goal difference (goals scored minus goals conceded) first.\n3. Then more goals scored first.\n4. Teams that are still level on all three of those form a tied group. Within each tied group, compute a mini-league using only the matches played between teams of that same group: more mini-league points first.\n5. Teams in a tied group that are also level on mini-league points are ordered by name, alphabetically (ordinary string comparison).\n\nReturn the list of team names from first place to last place.\n\nExample: rank_teams([[\"Ants\", \"Bees\", 1, 0], [\"Bees\", \"Cats\", 1, 0], [\"Cats\", \"Ants\", 1, 0]]) returns [\"Ants\", \"Bees\", \"Cats\"], because all three are level on everything, including the mini-league, so names decide.",
+      "tests": [
+        [
+          [
+            [
+              [
+                "Ants",
+                "Bees",
+                1,
+                0
+              ],
+              [
+                "Bees",
+                "Cats",
+                1,
+                0
+              ],
+              [
+                "Cats",
+                "Ants",
+                1,
+                0
               ]
             ]
           ],
           [
-            [
-              1,
-              4
-            ],
-            [
-              5,
-              8
-            ]
+            "Ants",
+            "Bees",
+            "Cats"
           ]
         ],
         [
@@ -363,179 +4702,1640 @@
           [
             [
               [
-                1,
-                2
-              ],
+                "Zed",
+                "Abe",
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            "Abe",
+            "Zed"
+          ]
+        ],
+        [
+          [
+            [
               [
+                "Zed",
+                "Abe",
                 2,
-                3
+                1
               ]
             ]
           ],
           [
-            [
-              1,
-              3
-            ]
+            "Zed",
+            "Abe"
           ]
         ],
         [
           [
             [
               [
+                "A",
+                "B",
                 1,
-                10
-              ],
-              [
-                2,
-                3
-              ]
-            ]
-          ],
-          [
-            [
-              1,
-              10
-            ]
-          ]
-        ],
-        [
-          [
-            [
-              [
-                4,
-                5
-              ],
-              [
-                1,
-                2
-              ]
-            ]
-          ],
-          [
-            [
-              1,
-              2
-            ],
-            [
-              4,
-              5
-            ]
-          ]
-        ],
-        [
-          [
-            [
-              [
-                1,
-                2
-              ],
-              [
-                4,
-                5
-              ],
-              [
-                3,
-                3
-              ]
-            ]
-          ],
-          [
-            [
-              1,
-              2
-            ],
-            [
-              3,
-              3
-            ],
-            [
-              4,
-              5
-            ]
-          ]
-        ],
-        [
-          [
-            [
-              [
-                -5,
-                -1
-              ],
-              [
-                -2,
                 0
               ],
               [
-                7,
-                7
+                "C",
+                "D",
+                1,
+                0
+              ],
+              [
+                "B",
+                "A",
+                1,
+                0
+              ],
+              [
+                "D",
+                "C",
+                1,
+                0
+              ],
+              [
+                "C",
+                "A",
+                2,
+                2
               ]
             ]
           ],
           [
+            "A",
+            "C",
+            "B",
+            "D"
+          ]
+        ],
+        [
+          [
             [
-              -5,
-              0
-            ],
-            [
-              7,
-              7
+              [
+                "A",
+                "B",
+                2,
+                0
+              ],
+              [
+                "B",
+                "A",
+                2,
+                0
+              ],
+              [
+                "A",
+                "B",
+                1,
+                1
+              ],
+              [
+                "C",
+                "D",
+                3,
+                1
+              ],
+              [
+                "D",
+                "C",
+                3,
+                1
+              ]
             ]
+          ],
+          [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "b",
+                "a",
+                1,
+                1
+              ],
+              [
+                "B",
+                "A",
+                1,
+                1
+              ]
+            ]
+          ],
+          [
+            "A",
+            "B",
+            "a",
+            "b"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "P",
+                "Q",
+                1,
+                0
+              ],
+              [
+                "R",
+                "S",
+                1,
+                0
+              ],
+              [
+                "Q",
+                "R",
+                1,
+                0
+              ],
+              [
+                "S",
+                "P",
+                1,
+                0
+              ],
+              [
+                "P",
+                "R",
+                0,
+                0
+              ],
+              [
+                "Q",
+                "S",
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            "P",
+            "Q",
+            "R",
+            "S"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Ajax",
+                "Crow",
+                2,
+                2
+              ],
+              [
+                "Fury",
+                "Gale",
+                0,
+                2
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Gale",
+                0,
+                2
+              ],
+              [
+                "Crow",
+                "Bolt",
+                1,
+                2
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                0,
+                0
+              ],
+              [
+                "Crow",
+                "Dune",
+                2,
+                1
+              ],
+              [
+                "Gale",
+                "Bolt",
+                1,
+                1
+              ],
+              [
+                "Ajax",
+                "Gale",
+                1,
+                0
+              ],
+              [
+                "Crow",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Fury",
+                "Gale",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Gale",
+            "Crow",
+            "Bolt",
+            "Fury",
+            "Dune"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Dune",
+                "Fury",
+                2,
+                1
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                2,
+                0
+              ],
+              [
+                "Gale",
+                "Echo",
+                1,
+                0
+              ],
+              [
+                "Dune",
+                "Echo",
+                1,
+                0
+              ],
+              [
+                "Echo",
+                "Fury",
+                0,
+                0
+              ],
+              [
+                "Gale",
+                "Bolt",
+                0,
+                2
+              ],
+              [
+                "Echo",
+                "Fury",
+                0,
+                2
+              ],
+              [
+                "Fury",
+                "Dune",
+                0,
+                1
+              ],
+              [
+                "Echo",
+                "Fury",
+                0,
+                2
+              ],
+              [
+                "Gale",
+                "Bolt",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Dune",
+            "Bolt",
+            "Fury",
+            "Gale",
+            "Echo",
+            "Ajax"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Crow",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Echo",
+                0,
+                0
+              ],
+              [
+                "Echo",
+                "Bolt",
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            "Crow",
+            "Echo",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Bolt",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                2,
+                0
+              ],
+              [
+                "Dune",
+                "Bolt",
+                2,
+                0
+              ],
+              [
+                "Dune",
+                "Ajax",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Dune",
+                0,
+                1
+              ],
+              [
+                "Bolt",
+                "Crow",
+                1,
+                2
+              ],
+              [
+                "Dune",
+                "Crow",
+                2,
+                2
+              ],
+              [
+                "Crow",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Ajax",
+                "Crow",
+                0,
+                2
+              ],
+              [
+                "Bolt",
+                "Crow",
+                0,
+                2
+              ]
+            ]
+          ],
+          [
+            "Crow",
+            "Dune",
+            "Ajax",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Echo",
+                "Crow",
+                0,
+                1
+              ],
+              [
+                "Echo",
+                "Ajax",
+                2,
+                2
+              ],
+              [
+                "Crow",
+                "Echo",
+                1,
+                0
+              ],
+              [
+                "Ajax",
+                "Crow",
+                0,
+                1
+              ],
+              [
+                "Ajax",
+                "Crow",
+                2,
+                2
+              ],
+              [
+                "Echo",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Echo",
+                "Crow",
+                1,
+                1
+              ],
+              [
+                "Ajax",
+                "Echo",
+                1,
+                2
+              ],
+              [
+                "Crow",
+                "Ajax",
+                0,
+                2
+              ],
+              [
+                "Crow",
+                "Ajax",
+                2,
+                0
+              ],
+              [
+                "Crow",
+                "Ajax",
+                1,
+                2
+              ]
+            ]
+          ],
+          [
+            "Crow",
+            "Ajax",
+            "Echo"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Fury",
+                "Echo",
+                0,
+                2
+              ],
+              [
+                "Fury",
+                "Crow",
+                0,
+                2
+              ],
+              [
+                "Crow",
+                "Fury",
+                1,
+                2
+              ],
+              [
+                "Echo",
+                "Fury",
+                2,
+                2
+              ],
+              [
+                "Fury",
+                "Echo",
+                2,
+                2
+              ],
+              [
+                "Crow",
+                "Fury",
+                2,
+                2
+              ],
+              [
+                "Echo",
+                "Crow",
+                1,
+                0
+              ]
+            ]
+          ],
+          [
+            "Echo",
+            "Fury",
+            "Crow"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Ajax",
+                "Fury",
+                1,
+                1
+              ],
+              [
+                "Ajax",
+                "Crow",
+                1,
+                1
+              ],
+              [
+                "Crow",
+                "Dune",
+                1,
+                1
+              ],
+              [
+                "Crow",
+                "Ajax",
+                0,
+                2
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Crow",
+            "Dune",
+            "Fury"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Ajax",
+                "Echo",
+                2,
+                2
+              ],
+              [
+                "Ajax",
+                "Echo",
+                0,
+                0
+              ],
+              [
+                "Ajax",
+                "Crow",
+                2,
+                0
+              ],
+              [
+                "Echo",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Echo",
+                "Crow",
+                2,
+                0
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Echo",
+            "Crow"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Gale",
+                "Echo",
+                2,
+                2
+              ],
+              [
+                "Echo",
+                "Gale",
+                1,
+                1
+              ],
+              [
+                "Gale",
+                "Fury",
+                1,
+                2
+              ],
+              [
+                "Echo",
+                "Ajax",
+                2,
+                2
+              ],
+              [
+                "Echo",
+                "Gale",
+                2,
+                2
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Gale",
+                "Ajax",
+                1,
+                1
+              ],
+              [
+                "Echo",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Ajax",
+                "Echo",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Echo",
+            "Gale",
+            "Fury"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Echo",
+                "Dune",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                0,
+                2
+              ],
+              [
+                "Dune",
+                "Ajax",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Echo",
+            "Dune",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Echo",
+                "Dune",
+                2,
+                1
+              ],
+              [
+                "Bolt",
+                "Echo",
+                2,
+                2
+              ],
+              [
+                "Bolt",
+                "Echo",
+                0,
+                0
+              ],
+              [
+                "Dune",
+                "Crow",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Echo",
+                0,
+                1
+              ],
+              [
+                "Echo",
+                "Bolt",
+                2,
+                0
+              ],
+              [
+                "Echo",
+                "Crow",
+                2,
+                0
+              ],
+              [
+                "Dune",
+                "Echo",
+                1,
+                1
+              ],
+              [
+                "Crow",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Crow",
+                "Echo",
+                2,
+                1
+              ]
+            ]
+          ],
+          [
+            "Echo",
+            "Crow",
+            "Dune",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Bolt",
+                "Crow",
+                0,
+                1
+              ],
+              [
+                "Dune",
+                "Crow",
+                1,
+                0
+              ],
+              [
+                "Crow",
+                "Echo",
+                2,
+                1
+              ],
+              [
+                "Dune",
+                "Crow",
+                2,
+                1
+              ],
+              [
+                "Dune",
+                "Bolt",
+                2,
+                1
+              ],
+              [
+                "Echo",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                1,
+                1
+              ],
+              [
+                "Crow",
+                "Dune",
+                1,
+                2
+              ]
+            ]
+          ],
+          [
+            "Dune",
+            "Crow",
+            "Ajax",
+            "Bolt",
+            "Echo"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Ajax",
+                "Fury",
+                2,
+                2
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Fury",
+                "Ajax",
+                1,
+                1
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                2,
+                0
+              ],
+              [
+                "Gale",
+                "Fury",
+                1,
+                1
+              ],
+              [
+                "Gale",
+                "Dune",
+                1,
+                1
+              ],
+              [
+                "Gale",
+                "Dune",
+                0,
+                0
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                0,
+                2
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Fury",
+            "Gale",
+            "Dune",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Dune",
+                "Bolt",
+                2,
+                1
+              ],
+              [
+                "Crow",
+                "Ajax",
+                2,
+                2
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                1,
+                2
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Crow",
+                "Gale",
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Dune",
+            "Bolt",
+            "Crow",
+            "Gale",
+            "Fury"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Fury",
+                "Bolt",
+                1,
+                2
+              ],
+              [
+                "Echo",
+                "Fury",
+                0,
+                0
+              ],
+              [
+                "Fury",
+                "Bolt",
+                0,
+                1
+              ],
+              [
+                "Bolt",
+                "Fury",
+                2,
+                0
+              ],
+              [
+                "Gale",
+                "Fury",
+                2,
+                0
+              ],
+              [
+                "Gale",
+                "Echo",
+                1,
+                0
+              ],
+              [
+                "Echo",
+                "Gale",
+                0,
+                1
+              ],
+              [
+                "Fury",
+                "Gale",
+                2,
+                0
+              ],
+              [
+                "Fury",
+                "Bolt",
+                0,
+                1
+              ],
+              [
+                "Gale",
+                "Echo",
+                1,
+                2
+              ],
+              [
+                "Fury",
+                "Echo",
+                0,
+                2
+              ]
+            ]
+          ],
+          [
+            "Bolt",
+            "Gale",
+            "Echo",
+            "Fury"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Fury",
+                "Bolt",
+                2,
+                2
+              ],
+              [
+                "Bolt",
+                "Gale",
+                0,
+                2
+              ],
+              [
+                "Fury",
+                "Gale",
+                1,
+                2
+              ],
+              [
+                "Gale",
+                "Bolt",
+                2,
+                0
+              ],
+              [
+                "Bolt",
+                "Fury",
+                2,
+                1
+              ],
+              [
+                "Gale",
+                "Fury",
+                2,
+                0
+              ],
+              [
+                "Gale",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Fury",
+                "Gale",
+                1,
+                1
+              ],
+              [
+                "Fury",
+                "Gale",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Gale",
+            "Bolt",
+            "Fury"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Crow",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Dune",
+                "Bolt",
+                0,
+                1
+              ],
+              [
+                "Crow",
+                "Bolt",
+                0,
+                1
+              ],
+              [
+                "Ajax",
+                "Crow",
+                0,
+                0
+              ],
+              [
+                "Crow",
+                "Dune",
+                0,
+                0
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                2,
+                1
+              ]
+            ]
+          ],
+          [
+            "Bolt",
+            "Ajax",
+            "Crow",
+            "Dune"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Crow",
+                "Dune",
+                1,
+                0
+              ],
+              [
+                "Gale",
+                "Dune",
+                2,
+                0
+              ],
+              [
+                "Bolt",
+                "Dune",
+                1,
+                2
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Fury",
+                "Dune",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Crow",
+                1,
+                2
+              ],
+              [
+                "Crow",
+                "Ajax",
+                1,
+                0
+              ],
+              [
+                "Gale",
+                "Dune",
+                1,
+                0
+              ],
+              [
+                "Dune",
+                "Gale",
+                1,
+                0
+              ],
+              [
+                "Dune",
+                "Fury",
+                2,
+                1
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                2,
+                1
+              ]
+            ]
+          ],
+          [
+            "Crow",
+            "Dune",
+            "Gale",
+            "Bolt",
+            "Ajax",
+            "Fury"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Fury",
+                "Echo",
+                0,
+                1
+              ],
+              [
+                "Ajax",
+                "Fury",
+                1,
+                2
+              ],
+              [
+                "Ajax",
+                "Dune",
+                2,
+                1
+              ],
+              [
+                "Echo",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Ajax",
+                "Echo",
+                0,
+                2
+              ],
+              [
+                "Gale",
+                "Fury",
+                1,
+                1
+              ],
+              [
+                "Echo",
+                "Gale",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Echo",
+            "Ajax",
+            "Fury",
+            "Gale",
+            "Dune"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Gale",
+                "Dune",
+                2,
+                1
+              ],
+              [
+                "Gale",
+                "Echo",
+                1,
+                2
+              ],
+              [
+                "Gale",
+                "Dune",
+                2,
+                2
+              ],
+              [
+                "Echo",
+                "Gale",
+                2,
+                1
+              ],
+              [
+                "Gale",
+                "Dune",
+                2,
+                2
+              ]
+            ]
+          ],
+          [
+            "Echo",
+            "Gale",
+            "Dune"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Echo",
+                "Bolt",
+                1,
+                2
+              ],
+              [
+                "Echo",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Echo",
+                "Bolt",
+                0,
+                1
+              ],
+              [
+                "Echo",
+                "Fury",
+                0,
+                2
+              ]
+            ]
+          ],
+          [
+            "Bolt",
+            "Fury",
+            "Echo"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Dune",
+                "Ajax",
+                2,
+                0
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                0
+              ],
+              [
+                "Ajax",
+                "Fury",
+                1,
+                0
+              ],
+              [
+                "Ajax",
+                "Dune",
+                2,
+                0
+              ],
+              [
+                "Dune",
+                "Fury",
+                0,
+                2
+              ],
+              [
+                "Ajax",
+                "Dune",
+                1,
+                0
+              ],
+              [
+                "Dune",
+                "Fury",
+                1,
+                2
+              ],
+              [
+                "Fury",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Ajax",
+                "Dune",
+                0,
+                1
+              ],
+              [
+                "Dune",
+                "Fury",
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            "Ajax",
+            "Fury",
+            "Dune"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Bolt",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Fury",
+                "Bolt",
+                0,
+                0
+              ],
+              [
+                "Fury",
+                "Ajax",
+                2,
+                0
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                1,
+                1
+              ]
+            ]
+          ],
+          [
+            "Fury",
+            "Ajax",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Ajax",
+                "Echo",
+                0,
+                2
+              ],
+              [
+                "Echo",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Ajax",
+                "Bolt",
+                1,
+                0
+              ],
+              [
+                "Ajax",
+                "Echo",
+                0,
+                2
+              ],
+              [
+                "Echo",
+                "Bolt",
+                2,
+                2
+              ],
+              [
+                "Bolt",
+                "Ajax",
+                1,
+                1
+              ]
+            ]
+          ],
+          [
+            "Echo",
+            "Ajax",
+            "Bolt"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Gale",
+                "Ajax",
+                0,
+                1
+              ],
+              [
+                "Echo",
+                "Fury",
+                1,
+                0
+              ],
+              [
+                "Fury",
+                "Bolt",
+                0,
+                2
+              ],
+              [
+                "Ajax",
+                "Gale",
+                0,
+                0
+              ],
+              [
+                "Bolt",
+                "Gale",
+                1,
+                0
+              ],
+              [
+                "Bolt",
+                "Fury",
+                1,
+                2
+              ]
+            ]
+          ],
+          [
+            "Bolt",
+            "Ajax",
+            "Echo",
+            "Fury",
+            "Gale"
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "Crow",
+                "Ajax",
+                0,
+                2
+              ],
+              [
+                "Bolt",
+                "Fury",
+                1,
+                2
+              ],
+              [
+                "Crow",
+                "Fury",
+                1,
+                1
+              ]
+            ]
+          ],
+          [
+            "Fury",
+            "Ajax",
+            "Crow",
+            "Bolt"
           ]
         ]
       ],
-      "reference": "```python\ndef merge_intervals(intervals):\n    out = []\n    for start, end in sorted(intervals):\n        if out and start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return out\n```"
-    },
-    {
-      "id": "code-006",
-      "scorer": "code",
-      "function": "charlie_cipher",
-      "prompt": "Write a function charlie_cipher(s) that encodes a string like this: count the letters from left to right starting at 1, skipping anything that is not a letter A-Z or a-z. The 1st letter moves forward 1 place in the alphabet, the 2nd letter moves forward 2 places, the 3rd moves forward 3, and so on, wrapping around from z to a. Uppercase stays uppercase and lowercase stays lowercase. Characters that are not letters are left unchanged and do not count. Example: charlie_cipher('ab c') returns 'bd f'.",
-      "tests": [
-        [
-          [
-            "ab c"
-          ],
-          "bd f"
-        ],
-        [
-          [
-            ""
-          ],
-          ""
-        ],
-        [
-          [
-            "Zz"
-          ],
-          "Ab"
-        ],
-        [
-          [
-            "Hello, World!"
-          ],
-          "Igopt, Cvzun!"
-        ],
-        [
-          [
-            "123"
-          ],
-          "123"
-        ],
-        [
-          [
-            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          ],
-          "bcdefghijklmnopqrstuvwxyzabcde"
-        ],
-        [
-          [
-            "Charlie Index v1"
-          ],
-          "Djdvqol Qwnpj i1"
-        ]
-      ],
-      "reference": "```python\ndef charlie_cipher(s):\n    out = []\n    n = 0\n    for ch in s:\n        if ch.isascii() and ch.isalpha():\n            n += 1\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + n) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n```"
+      "reference": "```python\ndef rank_teams(matches):\n    stats = {}\n    for home, away, hg, ag in matches:\n        for team in (home, away):\n            stats.setdefault(team, [0, 0, 0])\n        stats[home][1] += hg - ag\n        stats[away][1] += ag - hg\n        stats[home][2] += hg\n        stats[away][2] += ag\n        if hg > ag:\n            stats[home][0] += 3\n        elif ag > hg:\n            stats[away][0] += 3\n        else:\n            stats[home][0] += 1\n            stats[away][0] += 1\n    groups = {}\n    for team, key in stats.items():\n        groups.setdefault(tuple(key), []).append(team)\n    table = []\n    for key in sorted(groups, reverse=True):\n        group = groups[key]\n        mini = {team: 0 for team in group}\n        for home, away, hg, ag in matches:\n            if home in mini and away in mini and home != away:\n                if hg > ag:\n                    mini[home] += 3\n                elif ag > hg:\n                    mini[away] += 3\n                else:\n                    mini[home] += 1\n                    mini[away] += 1\n        table.extend(sorted(group, key=lambda team: (-mini[team], team)))\n    return table\n```"
     }
   ]
 }

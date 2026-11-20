@@ -167,7 +167,7 @@ def read_records(path):
         return [json.loads(line) for line in handle if line.strip()]
 
 
-def run_benchmark(models, results_dir, trials=3, workers=4, max_tokens=4000, mock=False, limit=None,
+def run_benchmark(models, results_dir, trials=3, workers=4, max_tokens=8000, mock=False, limit=None,
                   rpm=None):
     """Ask every model every question `trials` times and append replies to disk.
 

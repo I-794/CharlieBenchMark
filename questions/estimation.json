@@ -1,49 +1,79 @@
 {
   "category": "estimation",
   "name": "Estimation",
-  "instructions": "These are estimation problems. Your answer must be a single number written in digits, with no units and no range.",
+  "instructions": "These are estimation problems. Nobody expects the exact value, but the closer the better. Your answer must be a single number written in digits, with no units and no range.",
   "questions": [
     {
-      "id": "est-001",
+      "id": "est-h01",
       "scorer": "numeric_range",
-      "prompt": "Roughly how many times does a human heart beat over an 80-year life?",
-      "low": 2000000000,
-      "high": 4000000000
+      "prompt": "Estimate the sum of the first 1,000 prime numbers.",
+      "low": 3314621,
+      "high": 4051205,
+      "falloff": 2,
+      "exact_value": 3682913
     },
     {
-      "id": "est-002",
+      "id": "est-h02",
       "scorer": "numeric_range",
-      "prompt": "Roughly how many full turns does one tire of an ordinary passenger car make while driving 100 kilometers?",
-      "low": 40000,
-      "high": 60000
+      "prompt": "A multiplication table shows every product a x b for a and b from 1 to 100. Many products appear more than once. Estimate how many DIFFERENT numbers appear in the table.",
+      "low": 2470,
+      "high": 3342,
+      "falloff": 2,
+      "exact_value": 2906
     },
     {
-      "id": "est-003",
+      "id": "est-h03",
       "scorer": "numeric_range",
-      "prompt": "Roughly how many sheets of ordinary office printer paper would you need to stack to make a pile 1 meter tall?",
-      "low": 8000,
-      "high": 12000
+      "prompt": "Estimate how many digits the number 1000! (1000 factorial) has when written out in full.",
+      "low": 2516,
+      "high": 2620,
+      "falloff": 2,
+      "exact_value": 2568
     },
     {
-      "id": "est-004",
+      "id": "est-h04",
       "scorer": "numeric_range",
-      "prompt": "Roughly how many liters of water does it take to fill an Olympic-size swimming pool?",
-      "low": 2000000,
-      "high": 3750000
+      "prompt": "Estimate how many different ways there are to make exactly $5.00 using any mix of pennies, nickels, dimes and quarters (the order of the coins does not matter).",
+      "low": 15204,
+      "high": 22808,
+      "falloff": 2,
+      "exact_value": 19006
     },
     {
-      "id": "est-005",
+      "id": "est-h05",
       "scorer": "numeric_range",
-      "prompt": "Roughly how many words are in a typical 300-page printed novel?",
-      "low": 60000,
-      "high": 120000
+      "prompt": "Estimate how many whole numbers from 1 to 1,000,000 have digits that add up to exactly 27.",
+      "low": 49726,
+      "high": 60778,
+      "falloff": 2,
+      "exact_value": 55252
     },
     {
-      "id": "est-006",
+      "id": "est-h06",
       "scorer": "numeric_range",
-      "prompt": "A high school has 1,000 students. Roughly how many pencils do all of its students use up, in total, during one school year?",
-      "low": 5000,
-      "high": 50000
+      "prompt": "Estimate how many whole numbers from 1 to 10,000 are the product of exactly two primes (the two primes may be the same, so 4 = 2 x 2 and 15 = 3 x 5 both count).",
+      "low": 2231,
+      "high": 3019,
+      "falloff": 2,
+      "exact_value": 2625
+    },
+    {
+      "id": "est-h07",
+      "scorer": "numeric_range",
+      "prompt": "Estimate how many prime numbers lie between 1,000,000 and 1,100,000.",
+      "low": 6855,
+      "high": 7577,
+      "falloff": 2,
+      "exact_value": 7216
+    },
+    {
+      "id": "est-h08",
+      "scorer": "numeric_range",
+      "prompt": "Estimate the sum of the digits of the number 3 to the power 500 when written out in full.",
+      "low": 931,
+      "high": 1139,
+      "falloff": 2,
+      "exact_value": 1035
     }
   ]
 }

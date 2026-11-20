@@ -69,7 +69,7 @@ def write_csv(path, header, rows):
 def export_spreadsheets(results_dir, board, question_scores, questions):
     """Write CSV files that open directly in Google Sheets or Excel."""
     categories = board["categories"]
-    header = (["rank", "model", "model_id", "charlie_index", "plus_minus_95"]
+    header = (["rank", "model", "model_id", "score", "plus_minus_95"]
               + [c["name"] for c in categories]
               + ["cost_per_run_usd", "median_seconds", "tokens_per_second", "trials", "answered"])
 
@@ -112,6 +112,9 @@ def build_leaderboard(results_dir, model_names, mock=False):
         if not records:
             continue
         model_id = records[0]["model"]
+        if model_names and model_id not in model_names:
+            print(f"skipping {model_id}: it has saved replies but is not in the models file")
+            continue
         row = {"id": model_id, "name": model_names.get(model_id, model_id)}
         scores, question_scores[model_id] = score_model(records, categories, questions)
         row.update(scores)
@@ -136,7 +139,7 @@ def build_leaderboard(results_dir, model_names, mock=False):
 
 def print_leaderboard(board):
     categories = board["categories"]
-    header = f"{'#':>2}  {'Model':<28} {'Index':>6} {'+/-':>5}  " + " ".join(
+    header = f"{'#':>2}  {'Model':<28} {'Score':>6} {'+/-':>5}  " + " ".join(
         f"{c['name'][:10]:>10}" for c in categories) + f"  {'$/run':>8} {'sec':>6}"
     print(f"\n{board['benchmark']} v{board['version']}  ({board['question_count']} questions)")
     print(header)

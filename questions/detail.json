@@ -1,0 +1,79 @@
+{
+  "category": "detail",
+  "name": "Pattern and Detail",
+  "instructions": "These problems need exact, careful attention to detail. Close is not correct.",
+  "questions": [
+    {
+      "id": "det-count_letter-1",
+      "scorer": "exact",
+      "prompt": "Here is a string of 180 lowercase letters:\nunibsacadespaionliiuuonemoaooitplctocdtilastmuaiusniaiiacesdpoeoeaueurntcucpeatepeamtlasniriaoieetmnitooaritipccedabbidbmtalocioeeaaoarmciebaoltietpbbeailrttoepsrrnduedetsarrolmbua\nExactly how many times does the letter 'i' appear in it?",
+      "answer": "21"
+    },
+    {
+      "id": "det-count_letter-2",
+      "scorer": "exact",
+      "prompt": "Here is a string of 320 lowercase letters:\norcoaemapubsesetrsspnouuioebaotcaaoaicactclinacrtputotnbcnmocodamaamtberbleabouemtcdbroseuraporotpraottdaabpbaobbstirmiotdtrteiamonacutbcpmeetoatnpipatacpioaaunoobelececeoplcnilomrntummdbmcopsoaaaeidrtooatliilisecboaoecabtsmrsdiitplocetumntrabppbriitiiscotetmdooiiilroccltbiiipmloiaoouiplatpaarelmaptidrdnurmcasdrsertblr\nExactly how many times does the letter 'e' appear in it?",
+      "answer": "22"
+    },
+    {
+      "id": "det-nth_character-1",
+      "scorer": "exact",
+      "prompt": "Here is a string of 160 lowercase letters:\ntzsygvumbzgbkeqnhuthvseczhxnqcghhyadnhbjgtzuxrkgkttrfbwutdrmvfcwbeynfyrjbrpbcxabknygskzqbkuutqucpwpgbxgkkuywtkaspzjhkpxkunuyyjmqsrtburzpcwkvzmxafupzbkddmyjxvuhk\nCounting the first letter as number 1, which letter is number 81?",
+      "answer": "k"
+    },
+    {
+      "id": "det-nth_character-2",
+      "scorer": "exact",
+      "prompt": "Here is a string of 300 lowercase letters:\ncxrcjkawpkjhqcbqbdwyppnqvxbuhkreeunegzqnghxfrqbzhubzwskajuxcvwrdksggmskqqpqbmckuhwxshauxcfwthuahuwudkkvnmuucvznbqxhupcsruhbuzvucfcdfmqftypbvupfdwjebprgahdbcndkwyezcvggwfcmtubuwubqaachadkjunjvbgcchqunrmpgvvqdyjvtnphutxwryuaxayqrchsfdyzzyeyragkgzjewxubrumtrxqgnvwvzctpkpzvxeprfvsqdbuychjmqrachbswaudegm\nCounting the first letter as number 1, which letter is number 252?",
+      "answer": "u"
+    },
+    {
+      "id": "det-spot_changes-1",
+      "scorer": "exact",
+      "prompt": "Below are two lists of 40 codes each. List B is a copy of list A, except that exactly 3 of the codes were altered by one character. Number the positions 1, 2, 3 and so on from the start of the list. Find the positions where the two lists differ and add those position numbers together. What is the sum?\nList A: PX-7744, RB-0282, MW-3273, SV-0629, BT-8646, WT-6454, RG-3040, WB-4848, SS-9691, GB-4292, BR-0697, GD-5397, NJ-4733, RW-3912, SX-9920, ZR-6181, DD-3869, HP-2943, WM-2996, SX-3678, LP-3405, RB-3074, PM-5791, GK-7772, BS-6262, NZ-6660, BT-2109, TS-2075, CG-4328, LN-4236, NG-7472, CF-7763, LL-6951, CR-5383, PD-6674, SH-7546, KF-7257, CP-4582, BZ-1645, SL-9873\nList B: PX-7744, RB-0282, MW-3273, SV-0629, BT-8646, WT-6454, RG-3040, WB-4848, SS-9691, GB-4292, BR-0692, GD-5397, NJ-4733, RW-3912, SX-9920, ZR-6181, DD-3869, HP-2943, WM-2996, SX-3678, LP-3405, RB-3074, PM-5791, GK-7772, BS-6262, NZ-6660, BT-2109, SS-2075, CG-4328, LN-4236, NG-7472, CF-7763, LL-6951, CR-5383, WD-6674, SH-7546, KF-7257, CP-4582, BZ-1645, SL-9873",
+      "answer": "74"
+    },
+    {
+      "id": "det-spot_changes-2",
+      "scorer": "exact",
+      "prompt": "Below are two lists of 70 codes each. List B is a copy of list A, except that exactly 5 of the codes were altered by one character. Number the positions 1, 2, 3 and so on from the start of the list. Find the positions where the two lists differ and add those position numbers together. What is the sum?\nList A: WM-9478, FF-2901, VC-3204, CT-6708, ZK-1439, PF-1987, VM-7895, FV-0594, KZ-1228, CL-2263, TF-7430, XG-8253, WW-3540, WN-6373, MV-5584, DK-2303, MW-6905, BC-2773, ZW-8762, ND-4859, PK-0937, SD-8838, TD-4846, RW-2954, VX-3777, FH-1520, GT-5531, ZM-4913, LL-2409, XW-4269, GZ-0975, WC-4519, FN-6330, DR-5166, WD-9186, CN-1640, KH-5751, WK-1337, XV-0757, VD-0857, CN-2852, TG-0103, BD-0513, PF-1082, FL-4801, JG-3952, PC-5851, RG-6567, ST-1786, ZS-5903, KJ-4280, ZR-8948, JX-7335, FD-8712, HJ-6244, WK-1566, BT-3440, CX-9426, RZ-0873, LH-4965, ZZ-0299, NM-4757, PG-0121, PM-1758, VB-8876, JF-3006, BG-0619, SD-0770, HS-7023, ML-0847\nList B: WM-9478, FF-2981, VC-3204, CT-6708, ZK-1439, PF-1987, VM-7895, FV-0594, KZ-1228, CL-2260, TF-7430, XG-8253, WW-3540, WN-6373, MV-5584, DK-2303, MW-6905, BC-2773, ZW-8762, ND-4859, PK-0937, SD-8838, TD-4846, RW-2954, VX-3777, FH-1520, GT-5551, ZM-4910, LL-2409, XW-4269, GZ-0975, WC-4519, FN-6330, DR-5166, WD-9136, CN-1640, KH-5751, WK-1337, XV-0757, VD-0857, CN-2852, TG-0103, BD-0513, PF-1082, FL-4801, JG-3952, PC-5851, RG-6567, ST-1786, ZS-5903, KJ-4280, ZR-8948, JX-7335, FD-8712, HJ-6244, WK-1566, BT-3440, CX-9426, RZ-0873, LH-4965, ZZ-0299, NM-4757, PG-0121, PM-1758, VB-8876, JF-3006, BG-0619, SD-0770, HS-7023, ML-0847",
+      "answer": "102"
+    },
+    {
+      "id": "det-sort_words-1",
+      "scorer": "exact",
+      "prompt": "Sort these 16 words using three rules. Rule 1: words with fewer vowels (a, e, i, o, u) come first. Rule 2: among words with the same number of vowels, order them alphabetically by their LAST letter. Rule 3: among words still tied, put them in REVERSE alphabetical order by the whole word (so 'pear' before 'bear'). After sorting, which word is in position 13, counting the first word as position 1?\nWords: eleven, velvet, banana, sponge, engine, umpire, walnut, quiver, wizard, nutmeg, rabbit, bamboo, kitten, feather, mirror, magnet",
+      "answer": "eleven"
+    },
+    {
+      "id": "det-sort_words-2",
+      "scorer": "exact",
+      "prompt": "Sort these 28 words using three rules. Rule 1: words with fewer vowels (a, e, i, o, u) come first. Rule 2: among words with the same number of vowels, order them alphabetically by their LAST letter. Rule 3: among words still tied, put them in REVERSE alphabetical order by the whole word (so 'pear' before 'bear'). After sorting, which word is in position 25, counting the first word as position 1?\nWords: saddle, timber, ladder, forest, napkin, dinner, goblin, orange, radio, lemon, oyster, violin, banana, umpire, feather, sponge, candle, donkey, bamboo, mirror, rocket, igloo, hammer, walnut, pillow, turtle, insect, cactus",
+      "answer": "radio"
+    },
+    {
+      "id": "det-odd_multiple-1",
+      "scorer": "exact",
+      "prompt": "Every number in this list is an exact multiple of 7, except for one. Which number is NOT a multiple of 7?\n65387, 32921, 46298, 57463, 78442, 75250, 38570, 27244, 67361, 38206, 52577, 28745, 91308, 41391, 76818, 42294, 57771, 63917, 41664, 36351, 92757, 98021, 35147, 10969",
+      "answer": "28745"
+    },
+    {
+      "id": "det-odd_multiple-2",
+      "scorer": "exact",
+      "prompt": "Every number in this list is an exact multiple of 13, except for one. Which number is NOT a multiple of 13?\n38558, 27118, 38012, 32903, 84877, 90337, 99710, 65949, 39364, 99008, 30654, 63012, 78260, 67769, 28743, 30277, 22139, 83265, 67431, 27456, 20553, 37245, 46644, 46930, 30472, 60151, 68094, 57343, 49855, 91624, 40768, 44525, 47476, 30173, 58318, 61633, 19513, 99138, 15977, 41899",
+      "answer": "63012"
+    },
+    {
+      "id": "det-timetable-1",
+      "scorer": "exact",
+      "prompt": "Two train lines meet at Cedar. All times use the 24-hour clock.\nRed line: Alder to Birch to Cedar to Dunmore. Trains leave Alder at 13:15, 14:14, 14:23, 14:32, 14:58, 15:02, 15:03, 15:20, 15:24. Travel takes 9 minutes from Alder to Birch, 11 minutes from Birch to Cedar, and 7 minutes from Cedar to Dunmore.\nBlue line: Cedar to Elm to Foxley to Garnet. Trains leave Cedar at 13:35, 13:51, 14:04, 14:20, 14:31, 14:36, 14:47, 16:10, 16:56. Travel takes 5 minutes from Cedar to Elm, 8 minutes from Elm to Foxley, and 6 minutes from Foxley to Garnet.\nTrains do not wait at stations: they leave each stop at the moment they arrive. Changing from the Red line to the Blue line at Cedar takes at least 6 minutes, so you can only board a Blue train that leaves 6 or more minutes after your Red train arrives. You walk onto the Red line platform at Birch at 14:30 and can board a train leaving at that exact minute or later. What is the earliest time you can arrive at Foxley? Answer in the form HH:MM.",
+      "answer": "16:23"
+    },
+    {
+      "id": "det-timetable-2",
+      "scorer": "exact",
+      "prompt": "Two train lines meet at Cedar. All times use the 24-hour clock.\nRed line: Alder to Birch to Cedar to Dunmore. Trains leave Alder at 13:16, 13:46*, 14:24*, 14:28*, 14:29, 14:42, 14:58, 15:00, 15:52. Travel takes 8 minutes from Alder to Birch, 13 minutes from Birch to Cedar, and 14 minutes from Cedar to Dunmore.\nRed trains marked with * end at Birch and do not continue to Cedar.\nBlue line: Cedar to Elm to Foxley to Garnet. Trains leave Cedar at 13:40, 14:39, 14:42, 14:46, 14:54, 15:40, 15:53, 16:55, 16:58. Travel takes 13 minutes from Cedar to Elm, 12 minutes from Elm to Foxley, and 6 minutes from Foxley to Garnet.\nTrains do not wait at stations: they leave each stop at the moment they arrive. Changing from the Red line to the Blue line at Cedar takes at least 6 minutes, so you can only board a Blue train that leaves 6 or more minutes after your Red train arrives. You walk onto the Red line platform at Birch at 14:18 and can board a train leaving at that exact minute or later. What is the earliest time you can arrive at Foxley? Answer in the form HH:MM.",
+      "answer": "16:05"
+    }
+  ]
+}

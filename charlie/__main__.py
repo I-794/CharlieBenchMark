@@ -15,7 +15,7 @@ def load_models(path):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="charlie", description="Run and score the Charlie Index.")
+    parser = argparse.ArgumentParser(prog="charlie", description="Run and score AutismBench.")
     commands = parser.add_subparsers(dest="command", required=True)
 
     commands.add_parser("validate", help="check that the question files are well formed")
@@ -25,7 +25,7 @@ def main():
     run.add_argument("--only", help="run just this one model id from the models file")
     run.add_argument("--trials", type=int, default=3, help="times each question is asked (default 3)")
     run.add_argument("--workers", type=int, default=4, help="requests sent at once (default 4)")
-    run.add_argument("--max-tokens", type=int, default=4000)
+    run.add_argument("--max-tokens", type=int, default=8000)
     run.add_argument("--rpm", type=float, help="send at most this many requests per minute")
     run.add_argument("--limit", type=int, help="only the first N questions, for a cheap test")
     run.add_argument("--mock", action="store_true", help="use pretend models, no API key needed")

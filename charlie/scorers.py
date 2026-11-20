@@ -65,7 +65,8 @@ def score_exact(question, response):
 
 def score_numeric_range(question, response):
     """Full credit inside [low, high]. Outside it, credit falls off with distance
-    on a log scale and reaches zero when the answer is off by a factor of 10."""
+    on a log scale and reaches zero when the answer is off by a factor of `falloff`
+    (10 unless the question sets its own)."""
     answer = extract_answer(response)
     value = parse_number(answer) if answer else None
     if value is None or value <= 0:
@@ -74,7 +75,18 @@ def score_numeric_range(question, response):
     if low <= value <= high:
         return 1.0
     ratio = low / value if value < low else value / high
-    return max(0.0, 1.0 - math.log10(ratio))
+    return max(0.0, 1.0 - math.log(ratio) / math.log(question.get("falloff", 10)))
+
+
+WORD_RE = re.compile(r"[A-Za-z0-9'’-]+")
+
+
+def _words(text):
+    return [w.strip("'’-").lower() for w in WORD_RE.findall(text) if w.strip("'’-")]
+
+
+def _sentences(text):
+    return [part for part in re.split(r"[.!?]+", text) if part.strip()]
 
 
 def _lines(text):
@@ -91,9 +103,36 @@ def _load_json(text):
 def check_constraint(constraint, text):
     kind, value = constraint["type"], constraint.get("value")
     if kind == "word_count":
-        return len(re.findall(r"[A-Za-z0-9'’-]+", text)) == value
+        return len(WORD_RE.findall(text)) == value
     if kind == "sentence_count":
-        return len([part for part in re.split(r"[.!?]+", text) if part.strip()]) == value
+        return len(_sentences(text)) == value
+    if kind == "char_count":  # every character counts, including spaces and punctuation
+        return len(text) == value
+    if kind == "letter_count":  # how many times one letter appears
+        return text.lower().count(constraint["letter"].lower()) == value
+    if kind == "words_per_sentence":
+        return [len(WORD_RE.findall(part)) for part in _sentences(text)] == value
+    if kind == "words_per_line":
+        return [len(WORD_RE.findall(line)) for line in _lines(text)] == value
+    if kind == "word_lengths":  # letters in each word, in order
+        return [len(re.sub(r"[^a-z]", "", w)) for w in _words(text)] == value
+    if kind == "word_initials":  # first letter of each word, in order
+        return "".join(w[0] for w in _words(text)) == value.lower()
+    if kind == "max_word_length":
+        return all(len(re.sub(r"[^a-z0-9]", "", w)) <= value for w in _words(text))
+    if kind == "no_repeated_words":
+        words = _words(text)
+        return len(words) == len(set(words))
+    if kind == "line_last_words":
+        return [(_words(line) or [""])[-1] for line in _lines(text)] == [v.lower() for v in value]
+    if kind == "line_first_letter_in":
+        return all(line[0].lower() in value.lower() for line in _lines(text))
+    if kind == "line_ends_with":
+        return all(line.endswith(value) for line in _lines(text))
+    if kind == "ends_with_char":
+        return text.endswith(value)
+    if kind == "forbid_chars":
+        return not any(ch in text for ch in value)
     if kind == "line_count":
         return len(_lines(text)) == value
     if kind == "forbid_letter":
@@ -128,12 +167,16 @@ def check_constraint(constraint, text):
 
 
 def score_constraints(question, response):
-    """Fraction of the listed rules that the whole reply obeys."""
+    """Fraction of the listed rules that the whole reply obeys.
+    Questions marked "strict" give credit only when every rule is obeyed."""
     text = (response or "").strip()
     if not text:
         return 0.0
     rules = question["constraints"]
-    return sum(check_constraint(rule, text) for rule in rules) / len(rules)
+    passed = sum(check_constraint(rule, text) for rule in rules)
+    if question.get("strict"):
+        return 1.0 if passed == len(rules) else 0.0
+    return passed / len(rules)
 
 
 HARNESS = """
@@ -159,6 +202,7 @@ def extract_code(response):
 
 def score_code(question, response, timeout=10):
     """Fraction of hidden tests the submitted function passes.
+    Questions marked "strict" give credit only when every test passes.
 
     The code runs in a separate Python process with a time limit. It is not a
     real sandbox, so only run models you are comfortable running code from.
@@ -186,6 +230,8 @@ def score_code(question, response, timeout=10):
     if not found:
         return 0.0
     passed, total = map(int, found[-1])
+    if question.get("strict"):
+        return 1.0 if total and passed == total else 0.0
     return passed / total if total else 0.0
 
 

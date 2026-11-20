@@ -4,68 +4,225 @@
   "instructions": "",
   "questions": [
     {
-      "id": "if-001",
+      "id": "if-h01",
       "scorer": "constraints",
-      "prompt": "Describe the ocean in exactly 12 words. Do not use the letter 'e' anywhere in your reply.",
+      "strict": true,
+      "prompt": "Write one sentence of exactly 10 words in which the first word has 1 letter, the second word has 2 letters, the third has 3 letters, and so on up to a tenth word with 10 letters.",
       "constraints": [
-        {"type": "word_count", "value": 12},
-        {"type": "forbid_letter", "value": "e"}
+        {
+          "type": "word_lengths",
+          "value": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "type": "sentence_count",
+          "value": 1
+        }
       ],
-      "reference": "Vast salty liquid mass rolling across our world, calm and stormy always."
+      "reference": "I am the best baker around, serving aromatic delicious croissants."
     },
     {
-      "id": "if-002",
+      "id": "if-h02",
       "scorer": "constraints",
-      "prompt": "Write exactly 3 sentences about dogs. Use only lowercase letters. The very last word of your reply must be 'woof'.",
+      "strict": true,
+      "prompt": "Write one sentence of exactly 26 words in which the first word starts with A, the second with B, the third with C, and so on through the alphabet to a last word starting with Z.",
       "constraints": [
-        {"type": "sentence_count", "value": 3},
-        {"type": "lowercase"},
-        {"type": "ends_with", "value": "woof"}
+        {
+          "type": "word_initials",
+          "value": "abcdefghijklmnopqrstuvwxyz"
+        },
+        {
+          "type": "sentence_count",
+          "value": 1
+        }
       ],
-      "reference": "dogs are loyal friends. they love to run and play outside. every happy dog says woof."
+      "reference": "A big cat danced elegantly, flipping gracefully, happily ignoring jealous kittens lurking, meowing noisily, only pausing quietly, resting silently, then unexpectedly vaulting with xenial youthful zeal."
     },
     {
-      "id": "if-003",
+      "id": "if-h03",
       "scorer": "constraints",
-      "prompt": "Invent a fictional student. Reply with only a raw JSON object (no code fences, no extra text) that has exactly these three keys: \"name\" (a string), \"age\" (a whole number), and \"hobbies\" (a list of exactly 3 strings).",
+      "strict": true,
+      "prompt": "Write exactly 4 sentences about winter. Every sentence must have exactly 10 words. You may not use the letter 'e' or the letter 'a' anywhere.",
       "constraints": [
-        {"type": "json_keys", "value": ["name", "age", "hobbies"]},
-        {"type": "json_int", "key": "age"},
-        {"type": "json_array_len", "key": "hobbies", "value": 3}
+        {
+          "type": "words_per_sentence",
+          "value": [
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        {
+          "type": "forbid_letter",
+          "value": "e"
+        },
+        {
+          "type": "forbid_letter",
+          "value": "a"
+        }
       ],
-      "reference": "{\"name\": \"Mira Okafor\", \"age\": 16, \"hobbies\": [\"chess\", \"running\", \"painting\"]}"
+      "reference": "Cold winds blow through this thin wood with icy fury. Snow sits thick upon roofs, posts, fords, tools, logs, rocks. Kids build tiny forts, simply shouting with joy until dusk. Soon morning sun will glow on frost, bright but cold."
     },
     {
-      "id": "if-004",
+      "id": "if-h04",
       "scorer": "constraints",
-      "prompt": "Write a poem about nature that is exactly 7 lines long. The first letters of the lines, read from top to bottom, must spell CHARLIE. Do not add a title.",
+      "strict": true,
+      "prompt": "Write exactly 6 lines. Line 1 must have exactly 1 word, line 2 exactly 2 words, and so on up to line 6 with exactly 6 words. Every line must end with a question mark. No word may appear more than once in your whole reply. You may not use the letter 's' anywhere.",
       "constraints": [
-        {"type": "line_count", "value": 7},
-        {"type": "acrostic", "value": "CHARLIE"}
+        {
+          "type": "words_per_line",
+          "value": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "type": "line_ends_with",
+          "value": "?"
+        },
+        {
+          "type": "no_repeated_words"
+        },
+        {
+          "type": "forbid_letter",
+          "value": "s"
+        }
       ],
-      "reference": "Calm winds drift over hills\nHollow trees hum softly\nA river bends below\nRain taps on old stone\nLight fades into dusk\nInsects sing at night\nEvening settles in"
+      "reference": "Why?\nReally now?\nCould you play?\nWhere did Bob go?\nCan a red bird fly?\nWill any tall elk run home?"
     },
     {
-      "id": "if-005",
+      "id": "if-h05",
       "scorer": "constraints",
-      "prompt": "List exactly 5 different fruits, one per line, in alphabetical order. Do not use numbers, bullets, or any other text.",
+      "strict": true,
+      "prompt": "Reply with a single line that is exactly 50 characters long, counting every letter, space and punctuation mark. It must contain exactly 9 words and end with a period.",
       "constraints": [
-        {"type": "line_count", "value": 5},
-        {"type": "sorted_lines"},
-        {"type": "no_bullets"}
+        {
+          "type": "char_count",
+          "value": 50
+        },
+        {
+          "type": "word_count",
+          "value": 9
+        },
+        {
+          "type": "line_count",
+          "value": 1
+        },
+        {
+          "type": "ends_with_char",
+          "value": "."
+        }
       ],
-      "reference": "apple\nbanana\ncherry\ngrape\nmango"
+      "reference": "The quick brown fox jumped over those sleepy dogs."
     },
     {
-      "id": "if-006",
+      "id": "if-h06",
       "scorer": "constraints",
-      "prompt": "Explain what a benchmark is in exactly 2 sentences. You must use the word 'yardstick'. You must not use the words 'test', 'measure', or 'score'.",
+      "strict": true,
+      "prompt": "Write one sentence of exactly 12 words, all in lowercase, that contains the letter 'z' exactly 5 times in total.",
       "constraints": [
-        {"type": "sentence_count", "value": 2},
-        {"type": "contains", "value": "yardstick"},
-        {"type": "forbid_words", "value": ["test", "measure", "score"]}
+        {
+          "type": "word_count",
+          "value": 12
+        },
+        {
+          "type": "lowercase"
+        },
+        {
+          "type": "letter_count",
+          "letter": "z",
+          "value": 5
+        },
+        {
+          "type": "sentence_count",
+          "value": 1
+        }
       ],
-      "reference": "A benchmark is a shared yardstick that lets people compare different systems fairly. Everyone runs the same tasks so the results can be lined up side by side."
+      "reference": "the dizzy zebra gazed at a furry cat near the old zoo."
+    },
+    {
+      "id": "if-h07",
+      "scorer": "constraints",
+      "strict": true,
+      "prompt": "Write a poem of exactly 5 lines. Every line must have exactly 6 words. The last words of the five lines must be, in this order: moon, river, stone, moon, light. Every line must begin with a vowel (a, e, i, o or u). Do not use any commas.",
+      "constraints": [
+        {
+          "type": "words_per_line",
+          "value": [
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        {
+          "type": "line_last_words",
+          "value": [
+            "moon",
+            "river",
+            "stone",
+            "moon",
+            "light"
+          ]
+        },
+        {
+          "type": "line_first_letter_in",
+          "value": "aeiou"
+        },
+        {
+          "type": "forbid_chars",
+          "value": ","
+        }
+      ],
+      "reference": "Under the quiet sky the moon\nEnters softly beside the silver river\nOld shadows rest upon cold stone\nAbove us drifts a pale moon\nEvery wave returns its borrowed light"
+    },
+    {
+      "id": "if-h08",
+      "scorer": "constraints",
+      "strict": true,
+      "prompt": "Write a tiny story of exactly 3 sentences and exactly 30 words in total. No word may be longer than 4 letters. No word may be used more than once. The story must include the words 'frog' and 'lamp'.",
+      "constraints": [
+        {
+          "type": "sentence_count",
+          "value": 3
+        },
+        {
+          "type": "word_count",
+          "value": 30
+        },
+        {
+          "type": "max_word_length",
+          "value": 4
+        },
+        {
+          "type": "no_repeated_words"
+        },
+        {
+          "type": "contains",
+          "value": "frog"
+        },
+        {
+          "type": "contains",
+          "value": "lamp"
+        }
+      ],
+      "reference": "A tiny frog sat on the old lamp post at dusk. It saw two red ants move past his damp gray foot. Then rain fell hard, and all went dark."
     }
   ]
 }

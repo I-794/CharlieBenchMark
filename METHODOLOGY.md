@@ -1,39 +1,45 @@
-# Charlie Index methodology
+# AutismBench methodology
 
-Version 1.0
+Version 2.0
 
 ## What is measured
 
-Five categories. Every question is worth between 0 and 1 point.
+Six categories. Every question is worth between 0 and 1 point.
 
-1. **Novel Reasoning.** Problems built on invented games and rules, so the answer cannot be recalled from training data. Graded by exact match.
-2. **Honesty.** A mix of real factual questions and questions about things that do not exist. The model is told to answer `UNKNOWN` when the thing is not real or it is not confident. Fabricating an answer to a fake question scores 0, and so does answering `UNKNOWN` to a real one. Graded by exact match.
-3. **Instruction Following.** Writing tasks with strict rules (word counts, banned letters, formats). The score is the fraction of rules the reply obeys.
-4. **Estimation.** Order-of-magnitude questions. Full credit inside the accepted range. Outside it, credit drops along a log scale and reaches 0 when the answer is off by a factor of 10.
-5. **Coding.** Short Python functions. The score is the fraction of hidden tests passed. A solution that crashes or runs longer than 10 seconds scores 0.
+1. **Novel Reasoning.** Invented games, machines and scoring systems: finding who wins a made-up game from every starting position, running a rule-based machine over a long input, stepping a cell pattern forward, choosing the best hand under a made-up scoring system, finding a shortest route for a made-up chess piece. Nothing can be recalled from training data; it has to be worked out. Graded by exact match.
+2. **Pattern and Detail.** Tasks where close is not correct: counting a letter in a long string, finding one character at a numbered position, spotting the altered entries between two long lists, sorting words by three unusual rules, finding the one number that breaks a rule, and reading a train timetable with a tight connection. Graded by exact match.
+3. **Honesty.** A mix of questions that have an answer and questions that do not, either because the thing asked about does not exist or because the information given is not enough. The model is told to answer `UNKNOWN` in those cases. Half of the logic puzzles are answerable and half are not, and they look the same. Inventing an answer scores 0, and so does answering `UNKNOWN` when the answer can be worked out. Graded by exact match.
+4. **Instruction Following.** Writing tasks with several strict rules at once (exact word and character counts, banned letters, fixed word lengths, no repeated words). All or nothing: a reply scores 1 only if it obeys every rule.
+5. **Estimation.** Quantities that are impractical to compute exactly by hand but can be reasoned toward. The true values were computed by code. Full credit inside a band around the true value (between 2% and 20% wide, depending on the question). Outside the band, credit drops along a log scale and reaches 0 when the answer is off by a factor of 2.
+6. **Coding.** Python functions with long, detailed specs: an interpreter for a small stack language, an invented calendar, a spreadsheet with cycle detection, a game referee, a card optimiser, a train journey planner and a league table with tie-breaks. All or nothing: a solution scores 1 only if it passes every hidden test (25 to 41 per task). A solution that crashes or runs longer than 10 seconds scores 0.
 
 ## How answers are collected
 
 - Every model gets the same system prompt and the same question text. The prompts are in `charlie/core.py`.
 - For answer-style questions the model may reason freely but must finish with a line `ANSWER: <answer>`. Only that final line is graded. A reply without it scores 0.
-- Models run with their provider's default settings (no temperature override), through the OpenRouter API, with a reply limit of 4000 tokens.
+- Models run with their provider's default settings (no temperature override), through the OpenRouter API.
+- Each reply is limited to 8000 tokens, and for models that think before answering, the thinking counts toward that limit. A model that runs out before giving its answer scores 0 on that question.
 - Each question is asked 3 times per model, as separate conversations.
 - **No tools.** Models receive only the question as plain text. They cannot search the web, run code, or look anything up, so every answer comes from what the model already knows and can reason out. Model ids are used without OpenRouter's `:online` suffix or web plugin.
 
 ## How scores are calculated
 
 - **Category score** = the average of that category's question scores, times 100.
-- **Charlie Index** = the plain average of the five category scores. Every category counts equally, no matter how many questions it has.
-- The reported index is the average across the repeated runs. The **± value** is a 95% confidence interval: 1.96 times the standard deviation of the per-run index, divided by the square root of the number of runs. With only 3 runs this is a rough guide, not a precise figure.
+- **Overall score** = the plain average of the six category scores. Every category counts equally, no matter how many questions it has.
+- The reported score is the average across the repeated runs. The **± value** is a 95% confidence interval: 1.96 times the standard deviation of the per-run score, divided by the square root of the number of runs. With only 3 runs this is a rough guide, not a precise figure.
 - If two models' intervals overlap, treat them as tied.
 
 ## Price and speed
 
 - **Cost per run** is what the provider charged, as reported by the API, for answering every question once.
-- **Seconds** is the median wall-clock time for one question, including network time.
+- **Seconds** is the median wall-clock time for one question, including network time but not time spent waiting on rate limits.
 - **Tokens/sec** is total output tokens divided by total time.
 
 Speed depends on the provider and the time of day, so treat it as a snapshot.
+
+## Where the answer keys come from
+
+Puzzle questions are generated by `tools/build_questions.py`, and each answer is computed by the same code that builds the puzzle. Estimation truths are computed exactly. Coding tests are produced by running a reference solution, and `python -m charlie validate` confirms that every reference reply earns full marks. No answer key was typed in by hand except for the short factual Honesty questions.
 
 ## Grading is automatic and repeatable
 
@@ -41,13 +47,15 @@ No human and no model judges any answer. All grading code is in `charlie/scorers
 
 ## Known limits
 
-- The public question set is small. A model can gain or lose several points from one question, which is why the confidence intervals are wide. More questions make the index more stable.
-- Public questions can leak into training data. The hidden set in `questions_private/` exists to guard against this.
+- The question set is still small (69 public questions). One question can move a category by several points, which is why the confidence intervals matter.
+- Public questions can leak into training data. A hidden set with different numbers can be generated into `questions_private/` to guard against this.
 - Exact-match grading is strict. A correct answer in an unexpected format is marked wrong.
-- The Honesty category rewards saying `UNKNOWN`, so it must always contain real questions too, or a model could score well by never answering.
+- The 8000-token limit favours models that reason efficiently. That is a deliberate choice to keep costs bounded, but it means a model might solve more with a larger budget.
+- The Coding category rewards getting every edge case right in one attempt. It does not measure work on large codebases.
 
 ## Versions
 
 Scores are only comparable within the same version. Any change to questions, prompts, or scoring gets a new version number and an entry here.
 
-- **1.0**: first release.
+- **2.0**: renamed from Charlie Index to AutismBench. Replaced the whole question set with much harder questions after every version 1 question proved too easy (5 of 14 models scored 100, and 13 of 14 scored above 96). Added the Pattern and Detail category. Instruction Following and Coding became all-or-nothing. Estimation bands tightened. Reply limit raised from 4000 to 8000 tokens. Version 1 questions are archived in `questions/retired/`.
+- **1.0**: first release, 32 questions in five categories.

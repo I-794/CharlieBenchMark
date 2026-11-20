@@ -1,4 +1,4 @@
-"""Charlie Index: a small, transparent benchmark for language models."""
+"""AutismBench: a small, transparent benchmark for language models."""
 
-BENCHMARK_NAME = "Charlie Index"
-VERSION = "1.0"
+BENCHMARK_NAME = "AutismBench"
+VERSION = "2.0"

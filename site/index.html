@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Charlie Index</title>
+<title>AutismBench</title>
 <style>
   :root {
     color-scheme: light;
@@ -69,8 +69,8 @@
 <body>
 <main>
   <header>
-    <h1>Charlie Index</h1>
-    <p>An independent benchmark that scores language models on five skills, then reports how smart, how fast, and how expensive each one is.</p>
+    <h1>AutismBench</h1>
+    <p>An independent benchmark of pattern-spotting, rule-following and exact attention to detail. It scores language models on hard, code-graded tasks, then reports how smart, how fast, and how expensive each one is.</p>
     <div class="meta" id="meta"></div>
   </header>
   <div class="banner" id="banner" hidden>These are sample numbers from pretend models, shown so you can see the layout. Run the benchmark with real models to replace them.</div>
@@ -103,7 +103,7 @@ function hover(node, html) {
   node.addEventListener("mouseleave", () => { tip.style.display = "none"; });
 }
 function tipHtml(m) {
-  return `<b>${esc(m.name)}</b>Charlie Index ${fmt(m.index)}${m.ci95 != null ? " ± " + fmt(m.ci95) : ""}<br>` +
+  return `<b>${esc(m.name)}</b>Score ${fmt(m.index)}${m.ci95 != null ? " ± " + fmt(m.ci95) : ""}<br>` +
     `Cost per run ${money(m.cost_per_run_usd)}<br>Median time ${fmt(m.median_latency_s)} s per question`;
 }
 function section(title, sub) {
@@ -118,7 +118,7 @@ function drawTable(models) {
   const cols = [
     { label: "#", get: (m, i) => i + 1, show: (m, i) => i + 1, fixed: true },
     { label: "Model", get: m => m.name.toLowerCase(), show: m => esc(m.name) },
-    { label: "Charlie Index", get: m => m.index, show: m => fmt(m.index), cls: "index" },
+    { label: "Score", get: m => m.index, show: m => fmt(m.index), cls: "index" },
     { label: "± 95%", get: m => m.ci95 ?? -1, show: m => fmt(m.ci95), cls: "dim" },
     ...data.categories.map(c => ({ label: c.name, get: m => m.categories[c.id], show: m => fmt(m.categories[c.id]), heat: true })),
     { label: "Cost per run", get: m => m.cost_per_run_usd ?? Infinity, show: m => money(m.cost_per_run_usd) },
@@ -151,11 +151,11 @@ function drawTable(models) {
 }
 
 function drawBars(models) {
-  const box = section("Charlie Index", "Average of the five category scores. The thin line on each bar is the 95% confidence interval across repeated runs.");
+  const box = section("Overall score", "Average of the category scores. The thin line on each bar is the 95% confidence interval across repeated runs.");
   const rows = [...models].sort((a, b) => b.index - a.index);
   const W = 1000, left = 220, right = 70, rowH = 34, top = 6, H = top + rows.length * rowH + 26;
   const x = v => left + (W - left - right) * v / 100;
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Bar chart of Charlie Index by model" });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Bar chart of overall score by model" });
   for (const tick of [0, 25, 50, 75, 100]) {
     svg.appendChild(el("line", { class: "gridline", x1: x(tick), x2: x(tick), y1: top, y2: H - 22 }));
     svg.appendChild(el("text", { x: x(tick), y: H - 6, "text-anchor": "middle" }, tick));
@@ -192,7 +192,7 @@ function drawScatter(models) {
   const y0 = Math.max(0, Math.floor((Math.min(...scores) - 8) / 10) * 10), y1 = Math.min(100, Math.ceil((Math.max(...scores) + 5) / 10) * 10);
   const x = v => left + (W - left - right) * (Math.log10(v) - x0) / ((x1 - x0) || 1);
   const y = v => top + (H - top - bottom) * (1 - (v - y0) / ((y1 - y0) || 1));
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Scatter plot of Charlie Index against cost per run" });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Scatter plot of overall score against cost per run" });
   for (let t = y0; t <= y1; t += 10) {
     svg.appendChild(el("line", { class: "gridline", x1: left, x2: W - right, y1: y(t), y2: y(t) }));
     svg.appendChild(el("text", { x: left - 8, y: y(t) + 4, "text-anchor": "end" }, t));
@@ -203,7 +203,7 @@ function drawScatter(models) {
     svg.appendChild(el("text", { x: x(v), y: H - bottom + 18, "text-anchor": "middle" }, "$" + (p >= 0 ? v : v.toFixed(-p))));
   }
   svg.appendChild(el("text", { class: "axis-title", x: (left + W - right) / 2, y: H - 6, "text-anchor": "middle" }, "Cost to run the whole benchmark once (US dollars)"));
-  svg.appendChild(el("text", { class: "axis-title", x: left - 44, y: top - 16 }, "Charlie Index"));
+  svg.appendChild(el("text", { class: "axis-title", x: left - 44, y: top - 16 }, "Overall score"));
   rows.forEach(m => {
     const cx = x(m.cost_per_run_usd), cy = y(m.index), flip = cx > W - 220;
     svg.appendChild(el("text", { class: "name", x: cx + (flip ? -12 : 12), y: cy + 4, "text-anchor": flip ? "end" : "start" }, m.name));
@@ -220,9 +220,9 @@ function drawMethod() {
   const list = data.categories.map(c => `${esc(c.name)} (${c.questions})`).join(", ");
   const div = document.createElement("div"); div.className = "method";
   div.innerHTML = `<ul>
-    <li><b>Questions.</b> ${data.question_count} questions in five categories: ${list}.</li>
+    <li><b>Questions.</b> ${data.question_count} questions in ${data.categories.length} categories: ${list}.</li>
     <li><b>Scoring.</b> Every answer is graded by code, never by a person or another model. Each question is worth 0 to 1 point.</li>
-    <li><b>The index.</b> Each category score is the average of its questions, scaled to 100. The Charlie Index is the plain average of the five categories, so every category counts equally.</li>
+    <li><b>Overall score.</b> Each category score is the average of its questions, scaled to 100. The overall score is the plain average of the categories, so every category counts equally.</li>
     <li><b>Repeats.</b> Each model answers every question several times. The reported score is the average, and the ± value shows how much it moved between runs.</li>
     <li><b>Price and speed.</b> Cost is what the provider actually charged for one full pass. Seconds is the median time to answer one question.</li>
   </ul>`;
