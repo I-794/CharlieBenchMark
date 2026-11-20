@@ -1,5 +1,6 @@
 """Turn raw replies into scores, a leaderboard file, and data for the website."""
 
+import csv
 import glob
 import json
 import os
@@ -17,15 +18,18 @@ def mean(values):
 
 
 def score_model(records, categories, questions):
-    """Score one model's replies. Returns its leaderboard row."""
+    """Score one model's replies. Returns (leaderboard row, average score per question)."""
     by_id = {q["id"]: q for q in questions}
     records = [r for r in records if r["qid"] in by_id]
     trials = sorted({r["trial"] for r in records})
 
     # points[trial][category] = list of question scores
     points = {t: {c["id"]: [] for c in categories} for t in trials}
+    per_question = {}
     for record in records:
-        points[record["trial"]][record["category"]].append(score(by_id[record["qid"]], record["response"]))
+        value = score(by_id[record["qid"]], record["response"])
+        points[record["trial"]][record["category"]].append(value)
+        per_question.setdefault(record["qid"], []).append(value)
 
     per_trial_index, category_scores = [], {}
     for trial in trials:
@@ -42,7 +46,7 @@ def score_model(records, categories, questions):
     out_tokens = sum(r.get("completion_tokens") or 0 for r in records)
     costs = [r["cost_usd"] for r in records if r.get("cost_usd") is not None]
     expected = len(questions) * len(trials)
-    return {
+    row = {
         "index": round(mean(per_trial_index), 1),
         "ci95": ci95,
         "categories": category_scores,
@@ -52,18 +56,65 @@ def score_model(records, categories, questions):
         "tokens_per_second": round(out_tokens / sum(latencies), 1) if latencies and out_tokens else None,
         "cost_per_run_usd": round(sum(costs) / len(trials), 4) if costs and trials else None,
     }
+    return row, {qid: round(mean(values), 3) for qid, values in per_question.items()}
+
+
+def write_csv(path, header, rows):
+    with open(path, "w", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(header)
+        writer.writerows(rows)
+
+
+def export_spreadsheets(results_dir, board, question_scores, questions):
+    """Write CSV files that open directly in Google Sheets or Excel."""
+    categories = board["categories"]
+    header = (["rank", "model", "model_id", "charlie_index", "plus_minus_95"]
+              + [c["name"] for c in categories]
+              + ["cost_per_run_usd", "median_seconds", "tokens_per_second", "trials", "answered"])
+
+    def cells(row):
+        return ([row["name"], row["id"], row["index"], row["ci95"]]
+                + [row["categories"][c["id"]] for c in categories]
+                + [row["cost_per_run_usd"], row["median_latency_s"], row["tokens_per_second"],
+                   row["trials"], row["coverage"]])
+
+    write_csv(os.path.join(results_dir, "leaderboard.csv"), header,
+              [[rank] + cells(row) for rank, row in enumerate(board["models"], 1)])
+
+    # One row per question, one column per model: shows exactly what each model missed.
+    models = board["models"]
+    write_csv(os.path.join(results_dir, "question_scores.csv"),
+              ["question", "category"] + [m["name"] for m in models],
+              [[q["id"], q["category"]] + [question_scores[m["id"]].get(q["id"], "") for m in models]
+               for q in questions])
+
+    # Running log: every scoring day adds rows, so you can track scores over time.
+    history_path = os.path.join(results_dir, "history.csv")
+    history_header = ["date", "version", "questions"] + header[1:]
+    old = []
+    if os.path.exists(history_path):
+        with open(history_path, newline="") as handle:
+            rows = list(csv.reader(handle))
+        if rows and rows[0] == history_header:
+            old = [r for r in rows[1:] if not (r[0] == board["generated"] and r[1] == board["version"])]
+        elif rows:
+            os.replace(history_path, history_path.replace(".csv", f"-before-{board['generated']}.csv"))
+    new = [[board["generated"], board["version"], board["question_count"]] + cells(row) for row in models]
+    write_csv(history_path, history_header, old + new)
 
 
 def build_leaderboard(results_dir, model_names, mock=False):
     categories, questions = load_questions()
-    rows = []
+    rows, question_scores = [], {}
     for path in sorted(glob.glob(os.path.join(results_dir, "raw", "*.jsonl"))):
         records = read_records(path)
         if not records:
             continue
         model_id = records[0]["model"]
         row = {"id": model_id, "name": model_names.get(model_id, model_id)}
-        row.update(score_model(records, categories, questions))
+        scores, question_scores[model_id] = score_model(records, categories, questions)
+        row.update(scores)
         rows.append(row)
     rows.sort(key=lambda row: -row["index"])
 
@@ -79,6 +130,7 @@ def build_leaderboard(results_dir, model_names, mock=False):
         json.dump(board, handle, indent=2)
     with open(os.path.join(ROOT, "site", "data.js"), "w") as handle:
         handle.write("window.CHARLIE_DATA = " + json.dumps(board, indent=2) + ";\n")
+    export_spreadsheets(results_dir, board, question_scores, questions)
     return board
 
 

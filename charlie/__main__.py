@@ -62,7 +62,9 @@ def main():
         if not board["models"]:
             sys.exit("No saved replies found. Run `python -m charlie run` first.")
         print_leaderboard(board)
-        print("Saved results/leaderboard.json and site/data.js. Open site/index.html to see the site.")
+        where = os.path.relpath(results_dir, ROOT)
+        print(f"Website: open site/index.html")
+        print(f"Spreadsheets: {where}/leaderboard.csv, {where}/question_scores.csv, {where}/history.csv")
 
 
 if __name__ == "__main__":

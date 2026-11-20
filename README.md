@@ -64,6 +64,18 @@ Then open `site/index.html` in a browser.
 
 Raw replies are saved in `results/raw/`, one file per model. Scoring always re-grades from those files, so if you fix a scorer you can run `score` again without paying for new answers.
 
+## Tracking results in a spreadsheet
+
+Every time you run `score`, three spreadsheet files are written to `results/`:
+
+| File | What is in it |
+|---|---|
+| `leaderboard.csv` | The current leaderboard: one row per model with the index, every category, cost and speed |
+| `question_scores.csv` | One row per question and one column per model, so you can see exactly what each model missed |
+| `history.csv` | A running log. Each day you score adds new rows, so you can chart how scores change over time |
+
+To open one in Google Sheets: go to sheets.google.com, start a blank sheet, then File, Import, Upload, and pick the file. For `history.csv`, re-import with "Replace current sheet" after each new run and any charts you made will update.
+
 ### Useful options
 
 | Option | What it does |
