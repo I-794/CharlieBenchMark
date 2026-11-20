@@ -18,6 +18,7 @@ Five categories. Every question is worth between 0 and 1 point.
 - For answer-style questions the model may reason freely but must finish with a line `ANSWER: <answer>`. Only that final line is graded. A reply without it scores 0.
 - Models run with their provider's default settings (no temperature override), through the OpenRouter API, with a reply limit of 4000 tokens.
 - Each question is asked 3 times per model, as separate conversations.
+- **No tools.** Models receive only the question as plain text. They cannot search the web, run code, or look anything up, so every answer comes from what the model already knows and can reason out. Model ids are used without OpenRouter's `:online` suffix or web plugin.
 
 ## How scores are calculated
 
