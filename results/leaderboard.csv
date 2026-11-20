@@ -1,0 +1,16 @@
+rank,model,model_id,charlie_index,plus_minus_95,Coding,Estimation,Honesty,Instruction Following,Novel Reasoning,cost_per_run_usd,median_seconds,tokens_per_second,trials,answered
+1,Claude Fable 5.2,anthropic/claude-fable-5.2,100.0,0.0,100.0,100.0,100.0,100.0,100.0,0.2352,2.89,37.6,3,1.0
+2,Claude Opus 5.5,anthropic/claude-opus-5.5,100.0,0.0,100.0,100.0,100.0,100.0,100.0,0.1469,2.82,67.1,3,1.0
+3,Gemini 4 Hydrogen,google/gemini-4-hydrogen,100.0,0.0,100.0,100.0,100.0,100.0,100.0,0.1339,4.58,106.3,3,1.0
+4,Gemini 4 Neon,google/gemini-4-neon,100.0,0.0,100.0,100.0,100.0,100.0,100.0,0.3795,8.41,75.4,3,1.0
+5,Grok 4.7,x-ai/grok-4.7,100.0,0.0,100.0,100.0,100.0,100.0,100.0,0.2449,5.88,52.0,3,1.0
+6,Claude Haiku 5.5,anthropic/claude-haiku-5.5,99.4,1.1,100.0,100.0,100.0,97.2,100.0,0.0043,1.01,164.2,3,1.0
+7,Claude Sonnet 5.5,anthropic/claude-sonnet-5.5,99.4,1.1,100.0,100.0,100.0,97.2,100.0,0.0582,1.25,90.4,3,1.0
+8,Qwen4 Max,qwen/qwen4-max,99.3,0.7,100.0,100.0,100.0,96.3,100.0,0.0321,4.27,39.8,3,1.0
+9,DeepSeek V4.1 Flash,deepseek/deepseek-v4.1-flash,98.9,2.2,100.0,94.4,100.0,100.0,100.0,0.0083,1.19,170.5,3,1.0
+10,GPT-6.2 Astra,openai/gpt-6.2-astra,98.9,0.0,100.0,100.0,100.0,94.4,100.0,0.0973,1.83,24.4,3,1.0
+11,GPT-6.2 Sol,openai/gpt-6.2-sol,98.3,1.9,100.0,100.0,100.0,97.2,94.4,0.0185,0.76,31.2,3,1.0
+12,Muse Spark Open,meta/muse-spark-open,96.7,3.8,100.0,100.0,100.0,88.9,94.4,0.1352,3.23,232.4,3,1.0
+13,GPT-6 Luna,openai/gpt-6-luna,96.1,3.9,100.0,83.3,100.0,97.2,100.0,0.0021,2.47,42.0,3,1.0
+14,Mistral Large 4,mistralai/mistral-large-4-0,88.9,5.8,94.4,77.8,100.0,77.8,94.4,0.0847,6.22,73.8,3,1.0
+15,openai/gpt-4o-mini,openai/gpt-4o-mini,20.0,,100.0,0.0,0.0,0.0,0.0,0.0002,1.68,46.6,1,0.094

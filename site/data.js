@@ -1,7 +1,7 @@
 window.CHARLIE_DATA = {
   "benchmark": "Charlie Index",
   "version": "1.0",
-  "mock": true,
+  "mock": false,
   "generated": "2026-11-20",
   "question_count": 32,
   "categories": [
@@ -33,94 +33,274 @@ window.CHARLIE_DATA = {
   ],
   "models": [
     {
-      "id": "mock/atlas-large",
-      "name": "Atlas Large (sample)",
-      "index": 88.1,
-      "ci95": 7.3,
+      "id": "anthropic/claude-fable-5.2",
+      "name": "Claude Fable 5.2",
+      "index": 100.0,
+      "ci95": 0.0,
       "categories": {
-        "coding": 83.3,
-        "estimation": 83.3,
-        "honesty": 95.8,
-        "instruction_following": 94.4,
-        "novel_reasoning": 83.3
-      },
-      "trials": 3,
-      "coverage": 1.0,
-      "median_latency_s": 6.36,
-      "tokens_per_second": 64.9,
-      "cost_per_run_usd": 0.2859
-    },
-    {
-      "id": "mock/birch-pro",
-      "name": "Birch Pro (sample)",
-      "index": 85.4,
-      "ci95": 9.0,
-      "categories": {
-        "coding": 72.2,
-        "estimation": 72.2,
-        "honesty": 91.7,
-        "instruction_following": 90.7,
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 100.0,
         "novel_reasoning": 100.0
       },
       "trials": 3,
       "coverage": 1.0,
-      "median_latency_s": 3.9,
-      "tokens_per_second": 65.1,
-      "cost_per_run_usd": 0.1294
+      "median_latency_s": 2.89,
+      "tokens_per_second": 37.6,
+      "cost_per_run_usd": 0.2352
     },
     {
-      "id": "mock/atlas-small",
-      "name": "Atlas Small (sample)",
-      "index": 68.7,
-      "ci95": 11.5,
+      "id": "anthropic/claude-opus-5.5",
+      "name": "Claude Opus 5.5",
+      "index": 100.0,
+      "ci95": 0.0,
       "categories": {
-        "coding": 66.7,
-        "estimation": 66.7,
-        "honesty": 75.0,
-        "instruction_following": 68.5,
-        "novel_reasoning": 66.7
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 100.0,
+        "novel_reasoning": 100.0
       },
       "trials": 3,
       "coverage": 1.0,
-      "median_latency_s": 1.64,
-      "tokens_per_second": 64.2,
-      "cost_per_run_usd": 0.0351
+      "median_latency_s": 2.82,
+      "tokens_per_second": 67.1,
+      "cost_per_run_usd": 0.1469
     },
     {
-      "id": "mock/cedar-mini",
-      "name": "Cedar Mini (sample)",
-      "index": 59.9,
-      "ci95": 6.8,
+      "id": "google/gemini-4-hydrogen",
+      "name": "Gemini 4 Hydrogen",
+      "index": 100.0,
+      "ci95": 0.0,
       "categories": {
-        "coding": 61.1,
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 100.0,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 4.58,
+      "tokens_per_second": 106.3,
+      "cost_per_run_usd": 0.1339
+    },
+    {
+      "id": "google/gemini-4-neon",
+      "name": "Gemini 4 Neon",
+      "index": 100.0,
+      "ci95": 0.0,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 100.0,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 8.41,
+      "tokens_per_second": 75.4,
+      "cost_per_run_usd": 0.3795
+    },
+    {
+      "id": "x-ai/grok-4.7",
+      "name": "Grok 4.7",
+      "index": 100.0,
+      "ci95": 0.0,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 100.0,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 5.88,
+      "tokens_per_second": 52.0,
+      "cost_per_run_usd": 0.2449
+    },
+    {
+      "id": "anthropic/claude-haiku-5.5",
+      "name": "Claude Haiku 5.5",
+      "index": 99.4,
+      "ci95": 1.1,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 97.2,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 1.01,
+      "tokens_per_second": 164.2,
+      "cost_per_run_usd": 0.0043
+    },
+    {
+      "id": "anthropic/claude-sonnet-5.5",
+      "name": "Claude Sonnet 5.5",
+      "index": 99.4,
+      "ci95": 1.1,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 97.2,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 1.25,
+      "tokens_per_second": 90.4,
+      "cost_per_run_usd": 0.0582
+    },
+    {
+      "id": "qwen/qwen4-max",
+      "name": "Qwen4 Max",
+      "index": 99.3,
+      "ci95": 0.7,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 96.3,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 4.27,
+      "tokens_per_second": 39.8,
+      "cost_per_run_usd": 0.0321
+    },
+    {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "index": 98.9,
+      "ci95": 2.2,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 94.4,
+        "honesty": 100.0,
+        "instruction_following": 100.0,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 1.19,
+      "tokens_per_second": 170.5,
+      "cost_per_run_usd": 0.0083
+    },
+    {
+      "id": "openai/gpt-6.2-astra",
+      "name": "GPT-6.2 Astra",
+      "index": 98.9,
+      "ci95": 0.0,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 94.4,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 1.83,
+      "tokens_per_second": 24.4,
+      "cost_per_run_usd": 0.0973
+    },
+    {
+      "id": "openai/gpt-6.2-sol",
+      "name": "GPT-6.2 Sol",
+      "index": 98.3,
+      "ci95": 1.9,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 97.2,
+        "novel_reasoning": 94.4
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 0.76,
+      "tokens_per_second": 31.2,
+      "cost_per_run_usd": 0.0185
+    },
+    {
+      "id": "meta/muse-spark-open",
+      "name": "Muse Spark Open",
+      "index": 96.7,
+      "ci95": 3.8,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 100.0,
+        "honesty": 100.0,
+        "instruction_following": 88.9,
+        "novel_reasoning": 94.4
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 3.23,
+      "tokens_per_second": 232.4,
+      "cost_per_run_usd": 0.1352
+    },
+    {
+      "id": "openai/gpt-6-luna",
+      "name": "GPT-6 Luna",
+      "index": 96.1,
+      "ci95": 3.9,
+      "categories": {
+        "coding": 100.0,
+        "estimation": 83.3,
+        "honesty": 100.0,
+        "instruction_following": 97.2,
+        "novel_reasoning": 100.0
+      },
+      "trials": 3,
+      "coverage": 1.0,
+      "median_latency_s": 2.47,
+      "tokens_per_second": 42.0,
+      "cost_per_run_usd": 0.0021
+    },
+    {
+      "id": "mistralai/mistral-large-4-0",
+      "name": "Mistral Large 4",
+      "index": 88.9,
+      "ci95": 5.8,
+      "categories": {
+        "coding": 94.4,
         "estimation": 77.8,
-        "honesty": 45.8,
-        "instruction_following": 70.4,
-        "novel_reasoning": 44.4
+        "honesty": 100.0,
+        "instruction_following": 77.8,
+        "novel_reasoning": 94.4
       },
       "trials": 3,
       "coverage": 1.0,
-      "median_latency_s": 0.97,
-      "tokens_per_second": 63.4,
-      "cost_per_run_usd": 0.0095
+      "median_latency_s": 6.22,
+      "tokens_per_second": 73.8,
+      "cost_per_run_usd": 0.0847
     },
     {
-      "id": "mock/delta-open",
-      "name": "Delta Open (sample)",
-      "index": 49.4,
-      "ci95": 3.2,
+      "id": "openai/gpt-4o-mini",
+      "name": "openai/gpt-4o-mini",
+      "index": 20.0,
+      "ci95": null,
       "categories": {
-        "coding": 27.8,
-        "estimation": 50.0,
-        "honesty": 70.8,
-        "instruction_following": 48.1,
-        "novel_reasoning": 50.0
+        "coding": 100.0,
+        "estimation": 0.0,
+        "honesty": 0.0,
+        "instruction_following": 0.0,
+        "novel_reasoning": 0.0
       },
-      "trials": 3,
-      "coverage": 1.0,
-      "median_latency_s": 2.36,
-      "tokens_per_second": 65.5,
-      "cost_per_run_usd": 0.0195
+      "trials": 1,
+      "coverage": 0.094,
+      "median_latency_s": 1.68,
+      "tokens_per_second": 46.6,
+      "cost_per_run_usd": 0.0002
     }
   ]
 };
