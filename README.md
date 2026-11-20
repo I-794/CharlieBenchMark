@@ -43,7 +43,7 @@ Then open `site/index.html` in a browser.
 3. Do a cheap test first: one model, 3 questions, asked once.
 
    ```bash
-   python -m charlie run --only openai/gpt-4o-mini --limit 3 --trials 1
+   python -m charlie run --only openai/gpt-6-luna --limit 3 --trials 1
    ```
 
 4. Run the whole thing. Every model answers every question 3 times.
